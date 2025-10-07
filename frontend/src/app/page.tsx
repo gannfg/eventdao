@@ -23,11 +23,11 @@ export default function Home() {
         <nav className={styles.nav}>
           <a href="/" className={styles.navLink}>Home</a>
           <a href="/submit" className={styles.navLink}>Submit</a>
-          <a href="#" className={styles.navLink}>Explore</a>
-          <a href="#" className={styles.navLink}>Leaderboard</a>
-          <a href="#" className={styles.navLink}>Wallet</a>
+          <a href="/explore" className={styles.navLink}>Explore</a>
+          <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
+          <a href="/wallet" className={styles.navLink}>Wallet</a>
           <a href="#" className={styles.navLink}>Admin</a>
-          <a href="#" className={styles.navLink}>About</a>
+          <a href="/about" className={styles.navLink}>About</a>
         </nav>
         <div className={styles.actions}>
           <button className={styles.initializeBtn}>Initialize DAO</button>
@@ -59,7 +59,7 @@ export default function Home() {
         </p>
         <div className={styles.ctaRow}>
           <a className={styles.primaryBtn} href="/submit">🎟️ Start a Claim</a>
-          <a className={styles.secondaryBtn} href="#">🔍 View Events</a>
+          <a className={styles.secondaryBtn} href="/explore">🔍 View Events</a>
         </div>
       </section>
 
@@ -160,7 +160,7 @@ export default function Home() {
         <p>Build public trust through verifiable events. Submit your claim, verify with the community, and collect your digital proof of attendance on Solana.</p>
         <div className={styles.ctaRow}>
           <a className={styles.primaryBtn} href="/submit">Submit a Claim</a>
-          <a className={styles.secondaryBtn} href="#">Explore Claims</a>
+          <a className={styles.secondaryBtn} href="/explore">Explore Claims</a>
         </div>
       </section>
     </div>

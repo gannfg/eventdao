@@ -18,11 +18,11 @@ export default function SubmitPage() {
         <nav className={styles.nav}>
           <a href="/" className={styles.navLink}>Home</a>
           <a href="/submit" className={styles.navLink}>Submit</a>
-          <a href="#" className={styles.navLink}>Explore</a>
-          <a href="#" className={styles.navLink}>Leaderboard</a>
-          <a href="#" className={styles.navLink}>Wallet</a>
+          <a href="/explore" className={styles.navLink}>Explore</a>
+          <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
+          <a href="/wallet" className={styles.navLink}>Wallet</a>
           <a href="#" className={styles.navLink}>Admin</a>
-          <a href="#" className={styles.navLink}>About</a>
+          <a href="/about" className={styles.navLink}>About</a>
         </nav>
         <div className={styles.actions}>
           <button className={styles.initializeBtn}>Initialize DAO</button>

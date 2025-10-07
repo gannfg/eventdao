@@ -3,6 +3,14 @@
   --neon: #a6ff00;
   --ink: #0a0a0a;
   --card: #f6f7fb;
+  --background: #0b0b12;
+  --foreground: #e8e8f0;
+  --brand: #4c7dff;
+  --brand-strong: #2a5bff;
+  --accent: #b6fe4d;
+  --surface-1: rgba(255,255,255,0.06);
+  --surface-2: rgba(255,255,255,0.1);
+  --border: rgba(255,255,255,0.16);
 
   min-height: 100svh;
   color: var(--foreground);
@@ -69,9 +77,9 @@
   gap: 16px;
 }
 .initializeBtn {
-  background: rgba(183, 255, 77, 0.8);
+  background: rgba(182, 254, 77, 0.8);
   color: #0a1a00;
-  border: 1px solid rgba(183, 255, 77, 0.3);
+  border: 1px solid rgba(182, 254, 77, 0.3);
   border-radius: 12px;
   padding: 12px 24px;
   font-weight: 600;
@@ -81,13 +89,13 @@
   backdrop-filter: blur(10px);
 }
 .initializeBtn:hover {
-  background: rgba(183, 255, 77, 1);
-  border-color: rgba(183, 255, 77, 0.5);
+  background: rgba(182, 254, 77, 1);
+  border-color: rgba(182, 254, 77, 0.5);
 }
 .walletBtn {
-  background: rgba(183, 255, 77, 0.8);
+  background: rgba(182, 254, 77, 0.8);
   color: #0a1a00;
-  border: 1px solid rgba(183, 255, 77, 0.3);
+  border: 1px solid rgba(182, 254, 77, 0.3);
   border-radius: 12px;
   padding: 12px 16px;
   font-weight: 600;
@@ -100,8 +108,8 @@
   backdrop-filter: blur(10px);
 }
 .walletBtn:hover {
-  background: rgba(183, 255, 77, 1);
-  border-color: rgba(183, 255, 77, 0.5);
+  background: rgba(182, 254, 77, 1);
+  border-color: rgba(182, 254, 77, 0.5);
 }
 .walletIcon {
   font-size: 12px;
@@ -168,7 +176,7 @@
 .pillAvatar { background: var(--neon); color: #0a1a00; padding: 6px 8px; border-radius: 999px; font-weight: 800; }
 .pillAlt { display: inline-flex; gap: 8px; background: #eef1ff; color: var(--ink); padding: 10px 12px; border-radius: 999px; align-items: center; }
 .pillButton { background: var(--blue); color: white; padding: 6px 10px; border-radius: 999px; font-weight: 700; }
-.pillGreen { display: inline-flex; gap: 8px; background: var(--neon); color: #0a1a00; padding: 10px 12px; border-radius: 999px; align-items: center; }
+.pillGreen { display: inline-flex; gap: 8px; background: var(--accent); color: #0a1a00; padding: 10px 12px; border-radius: 999px; align-items: center; }
 
 @media (max-width: 900px) {
   .features { grid-template-columns: 1fr; }

@@ -50,13 +50,33 @@ jobs:
         cd backend
         npm run lint
         
+    - name: Check if Vercel deployment should run
+      id: should-deploy-vercel
+      run: |
+        if [ -n "$VERCEL_TOKEN" ] && [ -n "$ORG_ID" ] && [ -n "$PROJECT_ID" ]; then
+          echo "should-deploy=true" >> $GITHUB_OUTPUT
+        else
+          echo "should-deploy=false" >> $GITHUB_OUTPUT
+        fi
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        ORG_ID: ${{ secrets.ORG_ID }}
+        PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        
     - name: Deploy to Vercel (Frontend)
+      if: steps.should-deploy-vercel.outputs.should-deploy == 'true'
       uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.ORG_ID }}
         vercel-project-id: ${{ secrets.PROJECT_ID }}
         working-directory: ./frontend
+        
+    - name: Skip Vercel deployment
+      if: steps.should-deploy-vercel.outputs.should-deploy == 'false'
+      run: |
+        echo "Skipping Vercel deployment due to missing secrets."
+        echo "Please configure VERCEL_TOKEN, ORG_ID, and PROJECT_ID secrets in your GitHub repository settings."
         
     - name: Deploy to Railway (Backend)
       run: |

@@ -1,0 +1,478 @@
+.page {
+  --blue: #0a42ff;
+  --neon: #a6ff00;
+  --ink: #0a0a0a;
+  --card: #f6f7fb;
+  --background: #0b0b12;
+  --foreground: #e8e8f0;
+  --brand: #4c7dff;
+  --brand-strong: #2a5bff;
+  --accent: #b6fe4d;
+  --surface-1: rgba(255,255,255,0.06);
+  --surface-2: rgba(255,255,255,0.1);
+  --border: rgba(255,255,255,0.16);
+
+  min-height: 100vh;
+  background: url('/eventdao_background.png') center/cover no-repeat,
+              var(--background);
+  padding: 160px 20px 40px;
+  color: var(--foreground);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header styles matching submit page */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  max-width: 1400px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  z-index: 1000;
+}
+
+.brand { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+  align-items: flex-start;
+}
+
+.brandLogo {
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.brandSubtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+.nav { 
+  display: flex; 
+  gap: 32px; 
+  align-items: center;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover,
+.navLink.active { 
+  color: rgba(255, 255, 255, 1); 
+}
+
+.actions { 
+  display: flex; 
+  align-items: center; 
+  gap: 16px;
+}
+
+.initializeBtn {
+  background: rgba(182, 254, 77, 0.8);
+  color: #0a1a00;
+  border: 1px solid rgba(182, 254, 77, 0.3);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.initializeBtn:hover {
+  background: rgba(182, 254, 77, 1);
+  border-color: rgba(182, 254, 77, 0.5);
+}
+
+.walletBtn {
+  background: rgba(182, 254, 77, 0.8);
+  color: #0a1a00;
+  border: 1px solid rgba(182, 254, 77, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.walletBtn:hover {
+  background: rgba(182, 254, 77, 1);
+  border-color: rgba(182, 254, 77, 0.5);
+}
+
+.walletIcon {
+  font-size: 12px;
+}
+
+/* Page header */
+.pageHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.filterBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 1);
+}
+
+.filterBtn.active {
+  background: var(--accent);
+  color: #0a1a00;
+  border-color: var(--accent);
+}
+
+/* Leaderboard grid */
+.leaderboardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.leaderboardSection {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.leaderboardList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.leaderboardItem {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.leaderboardItem:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.rankContainer {
+  flex-shrink: 0;
+}
+
+.rankBadge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: white;
+}
+
+.rankBadge.gold {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #0a1a00;
+}
+
+.rankBadge.silver {
+  background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+  color: #0a1a00;
+}
+
+.rankBadge.bronze {
+  background: linear-gradient(135deg, #cd7f32, #daa520);
+  color: white;
+}
+
+.rankBadge.gray {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.address {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+.stats {
+  font-size: 12px;
+  opacity: 0.8;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.earnings {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.solAmount {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.reputation {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Summary stats */
+.summaryStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.statNumber {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 14px;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.blueCard {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
+.blueCard .statNumber {
+  color: #2196f3;
+}
+
+.greenCard {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: rgba(182, 254, 77, 0.3);
+}
+
+.greenCard .statNumber {
+  color: #b6fe4d;
+}
+
+.purpleCard {
+  background: rgba(156, 39, 176, 0.15);
+  border-color: rgba(156, 39, 176, 0.3);
+}
+
+.purpleCard .statNumber {
+  color: #9c27b0;
+}
+
+.orangeCard {
+  background: rgba(255, 152, 0, 0.15);
+  border-color: rgba(255, 152, 0, 0.3);
+}
+
+.orangeCard .statNumber {
+  color: #ff9800;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .page {
+    padding: 140px 16px 20px;
+  }
+  
+  .header {
+    padding: 16px 20px;
+    width: calc(100% - 32px);
+  }
+  
+  .nav {
+    gap: 20px;
+  }
+  
+  .navLink {
+    font-size: 14px;
+  }
+  
+  .filters {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .leaderboardGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .leaderboardSection {
+    padding: 20px;
+  }
+  
+  .summaryStats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .statCard {
+    padding: 20px;
+  }
+  
+  .statNumber {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .filters {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .filterBtn {
+    width: 200px;
+  }
+  
+  .summaryStats {
+    grid-template-columns: 1fr;
+  }
+  
+  .leaderboardItem {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .rankBadge {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .address {
+    font-size: 12px;
+  }
+  
+  .stats {
+    font-size: 11px;
+  }
+  
+  .solAmount {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,473 @@
+.page {
+  --blue: #0a42ff;
+  --neon: #a6ff00;
+  --ink: #0a0a0a;
+  --card: #f6f7fb;
+  --background: #0b0b12;
+  --foreground: #e8e8f0;
+  --brand: #4c7dff;
+  --brand-strong: #2a5bff;
+  --accent: #b6fe4d;
+  --surface-1: rgba(255,255,255,0.06);
+  --surface-2: rgba(255,255,255,0.1);
+  --border: rgba(255,255,255,0.16);
+
+  min-height: 100vh;
+  background: url('/eventdao_background.png') center/cover no-repeat,
+              var(--background);
+  padding: 160px 20px 40px;
+  color: var(--foreground);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header styles matching submit page */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  max-width: 1400px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  z-index: 1000;
+}
+
+.brand { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+  align-items: flex-start;
+}
+
+.brandLogo {
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.brandSubtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+.nav { 
+  display: flex; 
+  gap: 32px; 
+  align-items: center;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover,
+.navLink.active { 
+  color: rgba(255, 255, 255, 1); 
+}
+
+.actions { 
+  display: flex; 
+  align-items: center; 
+  gap: 16px;
+}
+
+.initializeBtn {
+  background: rgba(182, 254, 77, 0.8);
+  color: #0a1a00;
+  border: 1px solid rgba(182, 254, 77, 0.3);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.initializeBtn:hover {
+  background: rgba(182, 254, 77, 1);
+  border-color: rgba(182, 254, 77, 0.5);
+}
+
+.walletBtn {
+  background: rgba(182, 254, 77, 0.8);
+  color: #0a1a00;
+  border: 1px solid rgba(182, 254, 77, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.walletBtn:hover {
+  background: rgba(182, 254, 77, 1);
+  border-color: rgba(182, 254, 77, 0.5);
+}
+
+.walletIcon {
+  font-size: 12px;
+}
+
+/* Page header */
+.pageHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  gap: 20px;
+}
+
+.categoryFilters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.categoryBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.categoryBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 1);
+}
+
+.categoryBtn.active {
+  background: var(--accent);
+  color: #0a1a00;
+  border-color: var(--accent);
+}
+
+.sortContainer {
+  position: relative;
+}
+
+.sortSelect {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 40px 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.sortSelect:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 1);
+}
+
+.sortSelect:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(183, 255, 77, 0.1);
+}
+
+/* Events grid */
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.eventCard {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.eventCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.statusBadge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusBadge.active {
+  background: rgba(182, 254, 77, 0.2);
+  color: #b6fe4d;
+  border: 1px solid rgba(182, 254, 77, 0.3);
+}
+
+.statusBadge.completed {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.statusBadge.disputed {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.cardContent {
+  margin-bottom: 24px;
+}
+
+.eventTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.eventDescription {
+  font-size: 14px;
+  opacity: 0.8;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.eventDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.detailIcon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.stakingInfo {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.stakeItem {
+  text-align: center;
+}
+
+.stakeAmount {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stakeItem:first-child .stakeAmount {
+  color: #b6fe4d;
+}
+
+.stakeItem:last-child .stakeAmount {
+  color: #f44336;
+}
+
+.stakeLabel {
+  font-size: 12px;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bondInfo {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+.timeLeft {
+  font-size: 14px;
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.cardActions {
+  display: flex;
+  gap: 12px;
+}
+
+.stakeBtn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.stakeBtn:first-child {
+  background: #b6fe4d;
+  color: #0a1a00;
+}
+
+.stakeBtn:first-child:hover {
+  background: #a8e85a;
+  transform: translateY(-1px);
+}
+
+.stakeBtn.hoaxBtn {
+  background: #f44336;
+  color: white;
+}
+
+.stakeBtn.hoaxBtn:hover {
+  background: #da190b;
+  transform: translateY(-1px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .page {
+    padding: 140px 16px 20px;
+  }
+  
+  .header {
+    padding: 16px 20px;
+    width: calc(100% - 32px);
+  }
+  
+  .nav {
+    gap: 20px;
+  }
+  
+  .navLink {
+    font-size: 14px;
+  }
+  
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .categoryFilters {
+    justify-content: center;
+  }
+  
+  .eventsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .eventCard {
+    padding: 20px;
+  }
+  
+  .stakingInfo {
+    gap: 16px;
+  }
+  
+  .cardActions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .categoryFilters {
+    gap: 8px;
+  }
+  
+  .categoryBtn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
