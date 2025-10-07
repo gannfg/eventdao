@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm -w frontend run build",
     "dev:redirect": "node redirect3000.js",
-    "dev": "concurrently \"npm run dev:redirect\" \"npm run dev -w frontend\""
+    "dev": "concurrently \"npm run dev:redirect\" \"npm run dev -w frontend\"",
+    "deploy": "git add . && git commit -m \"Auto-deploy: $(date)\" && git push origin main",
+    "auto-push": "git add . && git commit -m \"Auto-update: $(date)\" && git push origin main"
   },
   "keywords": [],
   "author": "",
