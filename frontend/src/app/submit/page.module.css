@@ -378,6 +378,199 @@
   border-color: rgba(255,255,255,0.25);
 }
 
+/* Status messages */
+.statusMessage {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.statusMessage.success {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #4caf50;
+}
+
+.statusMessage.error {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #f44336;
+}
+
+.exploreLink {
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.exploreLink:hover {
+  color: #66bb6a;
+  text-decoration: underline;
+}
+
+/* Wallet warning */
+.walletWarning {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  color: #ffc107;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* File upload styles */
+.fileInput {
+  display: none;
+}
+
+.uploadLabel {
+  display: block;
+  cursor: pointer;
+  width: 100%;
+}
+
+.dragActive {
+  background: rgba(182, 254, 77, 0.1);
+  border-color: rgba(182, 254, 77, 0.5);
+}
+
+.uploadedFiles {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.uploadedTitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fileName {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.fileSize {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+.removeFile {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #f44336;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.removeFile:hover {
+  background: rgba(244, 67, 54, 0.3);
+  border-color: rgba(244, 67, 54, 0.5);
+}
+
+/* Disabled button styles */
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(182, 254, 77, 0.3);
+  border-color: rgba(182, 254, 77, 0.3);
+}
+
+/* Debug section styles */
+.debugSection {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+
+.debugTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ffc107;
+}
+
+.debugButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.debugBtn {
+  background: rgba(255, 193, 7, 0.2);
+  border: 1px solid rgba(255, 193, 7, 0.4);
+  color: #ffc107;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.debugBtn:hover {
+  background: rgba(255, 193, 7, 0.3);
+  border-color: rgba(255, 193, 7, 0.6);
+}
+
+.debugBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.userInfo {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.userInfo p {
+  margin: 4px 0;
+}
+
 @media (max-width: 768px) {
   .page {
     padding: 20px 16px;

@@ -190,7 +190,9 @@
 }
 
 .sortContainer {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .sortSelect {
@@ -219,6 +221,33 @@
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(183, 255, 77, 0.1);
+}
+
+.refreshBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+}
+
+.refreshBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.refreshBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Events grid */
@@ -395,6 +424,38 @@
 .stakeBtn.hoaxBtn:hover {
   background: #da190b;
   transform: translateY(-1px);
+}
+
+/* Loading, Error, and No Events States */
+.loading,
+.error,
+.noEvents {
+  text-align: center;
+  padding: 40px 20px;
+  margin: 20px 0;
+}
+
+.loading p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+}
+
+.error p {
+  color: #f44336;
+  font-size: 16px;
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.noEvents p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
 }
 
 /* Responsive design */

@@ -1,0 +1,438 @@
+.page {
+  --blue: #0a42ff;
+  --neon: #a6ff00;
+  --ink: #0a0a0a;
+  --card: #f6f7fb;
+  --background: #0b0b12;
+  --foreground: #e8e8f0;
+  --brand: #4c7dff;
+  --brand-strong: #2a5bff;
+  --accent: #b6fe4d;
+  --surface-1: rgba(255,255,255,0.06);
+  --surface-2: rgba(255,255,255,0.1);
+  --border: rgba(255,255,255,0.16);
+
+  min-height: 100vh;
+  background: url('/eventdao_background.png') center/cover no-repeat,
+              var(--background);
+  padding: 160px 20px 40px;
+  color: var(--foreground);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header styles matching other pages */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  max-width: 1400px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  z-index: 1000;
+}
+
+.brand { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+  align-items: flex-start;
+}
+
+.brandLogo {
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.brandSubtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+.nav { 
+  display: flex; 
+  gap: 32px; 
+  align-items: center;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover,
+.navLink.active { 
+  color: rgba(255, 255, 255, 1); 
+}
+
+.actions { 
+  display: flex; 
+  align-items: center; 
+  gap: 16px;
+}
+
+.initializeBtn {
+  background: rgba(182, 254, 77, 0.8);
+  color: #0a1a00;
+  border: 1px solid rgba(182, 254, 77, 0.3);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.initializeBtn:hover {
+  background: rgba(182, 254, 77, 1);
+  border-color: rgba(182, 254, 77, 0.5);
+}
+
+.walletBtn {
+  background: rgba(182, 254, 77, 0.8);
+  color: #0a1a00;
+  border: 1px solid rgba(182, 254, 77, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.walletBtn:hover {
+  background: rgba(182, 254, 77, 1);
+  border-color: rgba(182, 254, 77, 0.5);
+}
+
+/* Page header */
+.pageHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Tab Navigation */
+.tabNavigation {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 8px;
+}
+
+.tabButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  justify-content: center;
+}
+
+.tabButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tabButton.active {
+  background: var(--accent);
+  color: #0a1a00;
+  font-weight: 600;
+}
+
+.tabIcon {
+  font-size: 16px;
+}
+
+.tabLabel {
+  font-size: 14px;
+}
+
+/* Tab Content */
+.tabContent {
+  background: transparent;
+  padding: 0;
+}
+
+/* Configuration Content */
+.configContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.configPanel {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.configTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--foreground);
+}
+
+.configDescription {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 20px;
+}
+
+.configGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.configColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.configField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.configLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.configInput {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--foreground);
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.configInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(182, 254, 77, 0.1);
+}
+
+.configInput:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.configActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.updateButton {
+  background: var(--accent);
+  color: #0a1a00;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.updateButton:hover {
+  background: #a8e85a;
+  transform: translateY(-1px);
+}
+
+/* Network Settings */
+.networkFields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Management Content */
+.managementContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.managementTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--foreground);
+}
+
+.managementGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.managementCard {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.managementCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.managementCardTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.managementStat {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.managementDescription {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .page {
+    padding: 140px 16px 20px;
+  }
+  
+  .header {
+    padding: 16px 20px;
+    width: calc(100% - 32px);
+  }
+  
+  .nav {
+    gap: 20px;
+  }
+  
+  .navLink {
+    font-size: 14px;
+  }
+  
+  .tabNavigation {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .tabButton {
+    padding: 10px 16px;
+  }
+  
+  .tabContent {
+    padding: 20px;
+  }
+  
+  .configGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .managementGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .tabButton {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .tabIcon {
+    font-size: 14px;
+  }
+  
+  .tabLabel {
+    font-size: 12px;
+  }
+}

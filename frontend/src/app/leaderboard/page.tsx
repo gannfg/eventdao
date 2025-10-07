@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import WalletButton from "../../components/WalletButton";
 import styles from './page.module.css';
 
 interface Verifier {
@@ -141,10 +142,7 @@ export default function LeaderboardPage() {
         </nav>
         <div className={styles.actions}>
           <button className={styles.initializeBtn}>Initialize DAO</button>
-          <button className={styles.walletBtn}>
-            <span className={styles.walletIcon}>👻</span>
-            <span>6vWi...r6GK</span>
-          </button>
+          <WalletButton className={styles.walletBtn} />
         </div>
       </header>
 

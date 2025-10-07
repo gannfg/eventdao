@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import WalletButton from "../components/WalletButton";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -27,15 +28,12 @@ export default function Home() {
           <a href="/explore" className={styles.navLink}>Explore</a>
           <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
           <a href="/wallet" className={styles.navLink}>Wallet</a>
-          <a href="#" className={styles.navLink}>Admin</a>
+          <a href="/admin" className={styles.navLink}>Admin</a>
           <a href="/about" className={styles.navLink}>About</a>
         </nav>
         <div className={styles.actions}>
           <button className={styles.initializeBtn}>Initialize DAO</button>
-          <button className={styles.walletBtn}>
-            <span className={styles.walletIcon}>👻</span>
-            <span>6vWi...r6GK</span>
-          </button>
+          <WalletButton className={styles.walletBtn} />
         </div>
       </header>
 
@@ -51,6 +49,7 @@ export default function Home() {
           />
         </div>
       </main>
+
 
       <section className={styles.section} id="about">
         <h2>⚡ EventDAO — Proof of Event on Solana</h2>
@@ -73,7 +72,7 @@ export default function Home() {
           <iframe
             width="100%"
             height="100%"
-            src="https://www.youtube.com/embed/fDOtQFLEly4?si=YxhqAHPg7HurIBca&controls=0&autoplay=1&loop=1&playlist=fDOtQFLEly4&mute=1"
+            src="https://www.youtube.com/embed/2g9Zw1QWEt4?si=Un0abQ0jHsylMscA&autoplay=1&loop=1&playlist=2g9Zw1QWEt4&mute=1&controls=0"
             title="YouTube video player"
             frameBorder={0}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -96,15 +95,15 @@ export default function Home() {
           </details>
           <details className={styles.faqItem}>
             <summary>What is a Proof of Attendance NFT?</summary>
-            <p>It’s a collectible NFT that proves you were part of an event. You can keep it as a digital memory or show it off on-chain.</p>
+            <p>It's a collectible NFT that proves you were part of an event. You can keep it as a digital memory or show it off on-chain.</p>
           </details>
           <details className={styles.faqItem}>
             <summary>Do I need crypto to use EventDAO?</summary>
-            <p>Yes, you’ll need a Solana wallet and a small amount of SOL for staking or minting. However, we’re working on wallet-free onboarding for new users.</p>
+            <p>Yes, you'll need a Solana wallet and a small amount of SOL for staking or minting. However, we're working on wallet-free onboarding for new users.</p>
           </details>
           <details className={styles.faqItem}>
             <summary>Is this gambling or betting?</summary>
-            <p>No. EventDAO uses staking as a way to verify claims — not as a form of gambling. It’s about truth verification, transparency, and proof of participation.</p>
+            <p>No. EventDAO uses staking as a way to verify claims — not as a form of gambling. It's about truth verification, transparency, and proof of participation.</p>
           </details>
           <details className={styles.faqItem}>
             <summary>What kind of events can I submit?</summary>

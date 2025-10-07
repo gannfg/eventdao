@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import WalletButton from "../../components/WalletButton";
+import { useWalletIntegration } from "../../lib/wallet-integration";
 import styles from './page.module.css';
 
 interface Transaction {
@@ -51,6 +53,17 @@ const mockTransactions: Transaction[] = [
 
 export default function WalletPage() {
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
+  const { user: walletUser, loading: walletLoading, isConnected, walletAddress } = useWalletIntegration();
+  const [transactions] = useState(mockTransactions); // Use mock transactions
+  const [transactionsLoading] = useState(false);
+  const [analytics] = useState({
+    totalConnections: 0,
+    uniqueSessions: 0,
+    connectionFrequency: { daily: 0, weekly: 0, monthly: 0 },
+    lastConnection: null
+  });
+  const [connections] = useState([]);
+  const [connectionsLoading] = useState(false);
 
   const handleQuickAction = (action: string) => {
     setSelectedAction(action);
@@ -100,15 +113,12 @@ export default function WalletPage() {
           <a href="/explore" className={styles.navLink}>Explore</a>
           <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
           <a href="/wallet" className={`${styles.navLink} ${styles.active}`}>Wallet</a>
-          <a href="#" className={styles.navLink}>Admin</a>
+          <a href="/admin" className={styles.navLink}>Admin</a>
           <a href="/about" className={styles.navLink}>About</a>
         </nav>
         <div className={styles.actions}>
           <button className={styles.initializeBtn}>Initialize DAO</button>
-          <button className={styles.walletBtn}>
-            <span className={styles.walletIcon}>👻</span>
-            <span>6vWi...r6GK</span>
-          </button>
+          <WalletButton className={styles.walletBtn} />
         </div>
       </header>
 
@@ -116,7 +126,7 @@ export default function WalletPage() {
         <div className={styles.pageHeader}>
           <h1 className={styles.title}>Wallet Dashboard</h1>
           <p className={styles.subtitle}>
-            Manage your EVT tokens, staking, and transaction history
+            Manage your EVT tokens, staking, and transaction history (Local Mode - No Database)
           </p>
         </div>
 
@@ -176,6 +186,36 @@ export default function WalletPage() {
                 <div className={styles.progressFill}></div>
               </div>
               <div className={styles.progressText}>85% to next level</div>
+            </div>
+          </div>
+
+          <div className={styles.statsCard}>
+            <h3 className={styles.statsTitle}>Wallet Connections</h3>
+            <div className={styles.connectionStats}>
+              {connectionsLoading ? (
+                <div className={styles.loadingText}>Loading connection data...</div>
+              ) : (
+                <>
+                  <div className={styles.statItem}>
+                    <span>Total Connections:</span>
+                    <span>{analytics.totalConnections}</span>
+                  </div>
+                  <div className={styles.statItem}>
+                    <span>Unique Sessions:</span>
+                    <span>{analytics.uniqueSessions}</span>
+                  </div>
+                  <div className={styles.statItem}>
+                    <span>This Week:</span>
+                    <span>{analytics.connectionFrequency.weekly}</span>
+                  </div>
+                  {analytics.lastConnection && (
+                    <div className={styles.statItem}>
+                      <span>Last Connected:</span>
+                      <span>{new Date(analytics.lastConnection.connected_at).toLocaleDateString()}</span>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
 

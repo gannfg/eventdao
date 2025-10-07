@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import WalletButton from "../../components/WalletButton";
 import styles from './page.module.css';
 
 export default function AboutPage() {
@@ -22,15 +23,12 @@ export default function AboutPage() {
           <a href="/explore" className={styles.navLink}>Explore</a>
           <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
           <a href="/wallet" className={styles.navLink}>Wallet</a>
-          <a href="#" className={styles.navLink}>Admin</a>
+          <a href="/admin" className={styles.navLink}>Admin</a>
           <a href="/about" className={`${styles.navLink} ${styles.active}`}>About</a>
         </nav>
         <div className={styles.actions}>
           <button className={styles.initializeBtn}>Initialize DAO</button>
-          <button className={styles.walletBtn}>
-            <span className={styles.walletIcon}>👻</span>
-            <span>6vWi...r6GK</span>
-          </button>
+          <WalletButton className={styles.walletBtn} />
         </div>
       </header>
 

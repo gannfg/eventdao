@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import WalletButton from "../../components/WalletButton";
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletIntegration } from "../../lib/wallet-integration";
 import styles from './page.module.css';
 
 interface Event {
@@ -79,10 +82,19 @@ const categories = ['All', 'Concert', 'Conference', 'Sports'];
 export default function ExplorePage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('newest');
+  const [events] = useState(mockEvents); // Use mock events instead of database
+  const [loading] = useState(false);
+  const [error] = useState<string | null>(null);
+  const { publicKey } = useWallet();
+  const { user: walletUser, loading: walletLoading } = useWalletIntegration();
+
+  const refetch = () => {
+    console.log('Refetch requested (local mode - no database)');
+  };
 
   const filteredEvents = selectedCategory === 'All' 
-    ? mockEvents 
-    : mockEvents.filter(event => event.category === selectedCategory);
+    ? events 
+    : events.filter(event => event.category === selectedCategory);
 
   const sortedEvents = [...filteredEvents].sort((a, b) => {
     switch (sortBy) {
@@ -99,9 +111,21 @@ export default function ExplorePage() {
     }
   });
 
-  const handleStake = (eventId: string, stakeType: 'authentic' | 'hoax') => {
-    console.log(`Staking ${stakeType} on event ${eventId}`);
-    // TODO: Implement staking logic
+  const handleStake = async (eventId: string, stakeType: 'authentic' | 'hoax') => {
+    if (!publicKey || !walletUser) {
+      alert('Please connect your wallet first');
+      return;
+    }
+    
+    try {
+      // TODO: Implement actual staking logic with Solana program
+      console.log(`Staking ${stakeType} on event ${eventId} with wallet ${publicKey.toString()}`);
+      console.log(`User: ${walletUser.username} (${walletUser.wallet_address})`);
+      alert(`Staking ${stakeType} on event ${eventId} as ${walletUser.username}`);
+    } catch (error) {
+      console.error('Staking failed:', error);
+      alert('Staking failed. Please try again.');
+    }
   };
 
   return (
@@ -123,15 +147,12 @@ export default function ExplorePage() {
           <a href="/explore" className={`${styles.navLink} ${styles.active}`}>Explore</a>
           <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
           <a href="/wallet" className={styles.navLink}>Wallet</a>
-          <a href="#" className={styles.navLink}>Admin</a>
+          <a href="/admin" className={styles.navLink}>Admin</a>
           <a href="/about" className={styles.navLink}>About</a>
         </nav>
         <div className={styles.actions}>
           <button className={styles.initializeBtn}>Initialize DAO</button>
-          <button className={styles.walletBtn}>
-            <span className={styles.walletIcon}>👻</span>
-            <span>6vWi...r6GK</span>
-          </button>
+          <WalletButton className={styles.walletBtn} />
         </div>
       </header>
 
@@ -139,7 +160,7 @@ export default function ExplorePage() {
         <div className={styles.pageHeader}>
           <h1 className={styles.title}>Explore Events</h1>
           <p className={styles.subtitle}>
-            Browse and stake on events for verification
+            Browse and stake on events for verification (Local Mode - No Database)
           </p>
         </div>
 
@@ -169,8 +190,34 @@ export default function ExplorePage() {
               <option value="stake-high">Highest Stake</option>
               <option value="stake-low">Lowest Stake</option>
             </select>
+            <button
+              className={styles.refreshBtn}
+              onClick={refetch}
+              disabled={loading}
+              title="Refresh events"
+            >
+              {loading ? '⟳' : '↻'}
+            </button>
           </div>
         </div>
+
+        {loading && (
+          <div className={styles.loading}>
+            <p>Loading events...</p>
+          </div>
+        )}
+        
+        {error && (
+          <div className={styles.error}>
+            <p>Error loading events: {error}</p>
+          </div>
+        )}
+        
+        {!loading && !error && sortedEvents.length === 0 && (
+          <div className={styles.noEvents}>
+            <p>No events found. Be the first to submit an event!</p>
+          </div>
+        )}
 
         <div className={styles.eventsGrid}>
           {sortedEvents.map((event) => (
