@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import styles from './page.module.css';
 
 export default function AboutPage() {
@@ -16,7 +17,7 @@ export default function AboutPage() {
           <span className={styles.brandSubtitle}>Solana Web3 Events</span>
         </div>
         <nav className={styles.nav}>
-          <a href="/" className={styles.navLink}>Home</a>
+          <Link href="/" className={styles.navLink}>Home</Link>
           <a href="/submit" className={styles.navLink}>Submit</a>
           <a href="/explore" className={styles.navLink}>Explore</a>
           <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
@@ -75,7 +76,7 @@ export default function AboutPage() {
               EventDAO - A Solana-based platform for event verification
             </p>
             <ul className={styles.solutionList}>
-              <li>Users submit event claims (e.g. 'Coldplay Jakarta, Nov 15, 2025, happened')</li>
+              <li>Users submit event claims (e.g. &apos;Coldplay Jakarta, Nov 15, 2025, happened&apos;)</li>
               <li>Others stake small amounts (0.01-0.1 SOL) for or against</li>
               <li>Resolution via APIs, news feeds, or oracles</li>
               <li>Winners earn rewards</li>

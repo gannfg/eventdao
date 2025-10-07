@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from "next/image";
+import Link from "next/link";
 import styles from './page.module.css';
 
 interface Transaction {
@@ -94,7 +95,7 @@ export default function WalletPage() {
           <span className={styles.brandSubtitle}>Solana Web3 Events</span>
         </div>
         <nav className={styles.nav}>
-          <a href="/" className={styles.navLink}>Home</a>
+          <Link href="/" className={styles.navLink}>Home</Link>
           <a href="/submit" className={styles.navLink}>Submit</a>
           <a href="/explore" className={styles.navLink}>Explore</a>
           <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
