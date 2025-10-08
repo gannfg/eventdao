@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useWalletIntegration } from '../lib/wallet-integration';
@@ -17,13 +17,43 @@ const WalletButton: React.FC<WalletButtonProps> = ({ className }) => {
         loading: userLoading, 
         error: userError
     } = useWalletIntegration();
+    
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const handleClick = () => {
+    // Handle clicking outside to close dropdown
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        if (isDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isDropdownOpen]);
+
+    const handleButtonClick = () => {
         if (connected) {
-            disconnect();
+            setIsDropdownOpen(!isDropdownOpen);
         } else {
             setVisible(true);
         }
+    };
+
+    const handleChangeWallet = () => {
+        setIsDropdownOpen(false);
+        setVisible(true);
+    };
+
+    const handleSignOut = () => {
+        setIsDropdownOpen(false);
+        disconnect();
     };
 
     const getButtonText = () => {
@@ -45,15 +75,35 @@ const WalletButton: React.FC<WalletButtonProps> = ({ className }) => {
     };
 
     return (
-        <button
-            onClick={handleClick}
-            className={className}
-            disabled={connecting || userLoading}
-            title={userError ? `Error: ${userError}` : connected && user ? `Connected as ${user.username}` : 'Connect your wallet'}
-        >
-            <span>{getButtonIcon()}</span>
-            <span>{getButtonText()}</span>
-        </button>
+        <div className="wallet-button-container" ref={dropdownRef}>
+            <button
+                onClick={handleButtonClick}
+                className={className}
+                disabled={connecting || userLoading}
+                title={userError ? `Error: ${userError}` : connected && user ? `Connected as ${user.username}` : 'Connect your wallet'}
+            >
+                <span>{getButtonIcon()}</span>
+                <span>{getButtonText()}</span>
+                {connected && <span className="dropdown-arrow">▼</span>}
+            </button>
+            
+            {isDropdownOpen && connected && (
+                <div className="wallet-dropdown">
+                    <button 
+                        className="dropdown-item"
+                        onClick={handleChangeWallet}
+                    >
+                        Change Wallet
+                    </button>
+                    <button 
+                        className="dropdown-item"
+                        onClick={handleSignOut}
+                    >
+                        Sign Out
+                    </button>
+                </div>
+            )}
+        </div>
     );
 };
 

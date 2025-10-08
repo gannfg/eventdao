@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import WalletButton from "../components/WalletButton";
+import WelcomeMessage from "../components/WelcomeMessage";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -27,7 +28,7 @@ export default function Home() {
           <a href="/about" className={styles.navLink}>About</a>
         </nav>
         <div className={styles.actions}>
-          <button className={styles.initializeBtn}>Initialize DAO</button>
+          <WelcomeMessage className={styles.welcomeMessage} />
           <WalletButton className={styles.walletBtn} />
         </div>
       </header>
