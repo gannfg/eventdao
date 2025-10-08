@@ -20,36 +20,29 @@ jobs:
         node-version: '20'
         cache: 'npm'
         
-    - name: Install dependencies (Frontend)
+    - name: Install all dependencies
       run: |
-        cd frontend
-        npm install
-        npm list next
-        
-    - name: Install dependencies (Backend)
-      run: |
-        cd backend
         npm ci
+        
+    - name: Build shared package
+      run: |
+        npm run build:shared
         
     - name: Build Frontend
       run: |
-        cd frontend
-        npx next build
+        npm run build:frontend
         
     - name: Build Backend
       run: |
-        cd backend
-        npm run build
+        npm run build:backend
         
     - name: Run Tests (Frontend)
       run: |
-        cd frontend
-        npm run lint
+        npm run lint:frontend
         
     - name: Run Tests (Backend)
       run: |
-        cd backend
-        npm run lint
+        npm run lint:backend
         
     - name: Check if Vercel deployment should run
       id: should-deploy-vercel

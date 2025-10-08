@@ -8,13 +8,16 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true
   },
   "include": [
-    "**/*.ts"
+    "*.ts",
+    "types/**/*.ts",
+    "utils/**/*.ts"
   ],
   "exclude": [
     "node_modules",
