@@ -12,7 +12,11 @@ interface WalletButtonProps {
 const WalletButton: React.FC<WalletButtonProps> = ({ className }) => {
     const { wallet, connect, connecting, connected, disconnect } = useWallet();
     const { setVisible } = useWalletModal();
-    const { user, loading: userLoading, error: userError } = useWalletIntegration();
+    const { 
+        user, 
+        loading: userLoading, 
+        error: userError
+    } = useWalletIntegration();
 
     const handleClick = () => {
         if (connected) {

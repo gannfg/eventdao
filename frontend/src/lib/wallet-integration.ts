@@ -1,33 +1,68 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletUser } from '@eventdao/shared';
+import { userService, User } from './user-service';
+import { useRouter } from 'next/navigation';
+
+// Helper function to convert Supabase User to WalletUser
+const convertToWalletUser = (user: User): WalletUser => ({
+  id: user.id,
+  wallet_address: user.wallet_address,
+  username: user.username,
+  reputation: 0,
+  total_staked: 0,
+  total_verified: 0,
+  created_at: user.created_at,
+  updated_at: user.updated_at
+});
 
 export const walletService = {
-  // Create a local user object (no database)
+  // Get or create user from Supabase database
   async getOrCreateUser(walletAddress: string, connectionMetadata?: {
     userAgent?: string;
     ipAddress?: string;
     walletType?: string;
   }): Promise<WalletUser> {
-    // Create a local user object without database
-    const user: WalletUser = {
-      id: `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      wallet_address: walletAddress,
-      username: `User_${walletAddress.slice(0, 8)}`,
-      reputation: 0,
-      total_staked: 0,
-      total_verified: 0,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+    try {
+      // First, try to get existing user
+      const existingUser = await userService.getUserByWallet(walletAddress);
+      if (existingUser) {
+        console.log('✅ Existing user found:', {
+          walletAddress,
+          userId: existingUser.id,
+          username: existingUser.username
+        });
+        return convertToWalletUser(existingUser);
+      }
 
-    console.log('✅ Local user created:', {
-      walletAddress,
-      userId: user.id,
-      username: user.username
-    });
+      // User doesn't exist, return null to trigger username modal
+      console.log('❌ User not found, username required:', walletAddress);
+      return null;
+    } catch (error) {
+      console.error('Error getting user:', error);
+      throw new Error('Failed to check user status');
+    }
+  },
 
-    return user;
+  // Create user with username
+  async createUserWithUsername(walletAddress: string, username: string): Promise<WalletUser> {
+    try {
+      const newUser = await userService.createUser({
+        username,
+        wallet_address: walletAddress
+      });
+
+      console.log('✅ New user created:', {
+        walletAddress,
+        userId: newUser.id,
+        username: newUser.username
+      });
+
+      return convertToWalletUser(newUser);
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
   },
 
   // Record wallet connection locally (no database)
@@ -116,6 +151,7 @@ export const walletService = {
 // React hook for wallet integration
 export const useWalletIntegration = () => {
   const { publicKey, connected } = useWallet();
+  const router = useRouter();
   const [user, setUser] = useState<WalletUser | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -140,13 +176,20 @@ export const useWalletIntegration = () => {
       };
 
       const userData = await walletService.getOrCreateUser(walletAddress, connectionMetadata);
-      setUser(userData);
       
-      console.log('Wallet connected successfully:', {
-        walletAddress,
-        userId: userData.id,
-        username: userData.username
-      });
+      if (userData) {
+        // User exists, set user data
+        setUser(userData);
+        console.log('Wallet connected successfully:', {
+          walletAddress,
+          userId: userData.id,
+          username: userData.username
+        });
+      } else {
+        // User doesn't exist, redirect to username setup page
+        console.log('User not found, redirecting to username setup:', walletAddress);
+        router.push('/setup-username');
+      }
     } catch (err) {
       console.error('Wallet integration error:', {
         message: err instanceof Error ? err.message : 'Unknown error',
@@ -176,6 +219,7 @@ export const useWalletIntegration = () => {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (connected && publicKey) {

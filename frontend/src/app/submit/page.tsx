@@ -263,7 +263,8 @@ export default function SubmitPage() {
             </div>
           )}
 
-          {/* Debug Section */}
+          {/* Debug Section - Hidden */}
+          {/* 
           <div className={styles.debugSection}>
             <h4 className={styles.debugTitle}>Local Debug Tools</h4>
             <div className={styles.debugButtons}>
@@ -284,6 +285,7 @@ export default function SubmitPage() {
               )}
             </div>
           </div>
+          */}
 
           <div className={styles.formGroup}>
             <label htmlFor="eventTitle" className={styles.label}>
