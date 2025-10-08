@@ -16,6 +16,17 @@ interface Transaction {
   timestamp: string;
 }
 
+interface LastConnection {
+  connected_at: string;
+}
+
+interface Analytics {
+  totalConnections: number;
+  uniqueSessions: number;
+  connectionFrequency: { daily: number; weekly: number; monthly: number };
+  lastConnection: LastConnection | null;
+}
+
 const mockTransactions: Transaction[] = [
   {
     id: '1',
@@ -56,7 +67,7 @@ export default function WalletPage() {
   const { user: walletUser, loading: walletLoading, isConnected, walletAddress } = useWalletIntegration();
   const [transactions] = useState(mockTransactions); // Use mock transactions
   const [transactionsLoading] = useState(false);
-  const [analytics] = useState({
+  const [analytics] = useState<Analytics>({
     totalConnections: 0,
     uniqueSessions: 0,
     connectionFrequency: { daily: 0, weekly: 0, monthly: 0 },
