@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useWalletIntegration } from '../lib/wallet-integration';
@@ -10,7 +10,7 @@ interface WalletButtonProps {
 }
 
 const WalletButton: React.FC<WalletButtonProps> = ({ className }) => {
-    const { wallet, connect, connecting, connected, disconnect } = useWallet();
+    const { wallet, connecting, connected, disconnect } = useWallet();
     const { setVisible } = useWalletModal();
     const { 
         user, 

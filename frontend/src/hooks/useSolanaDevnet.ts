@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
 import {
-  getSolanaConnection,
   getAccountBalance,
   requestAirdrop,
   sendSol,
@@ -20,7 +18,7 @@ export const useSolanaDevnet = () => {
   const { user, isConnected, walletAddress } = useWalletIntegration();
   const [accountInfo, setAccountInfo] = useState<SolanaAccountInfo | null>(null);
   const [transactions, setTransactions] = useState<TransactionInfo[]>([]);
-  const [networkInfo, setNetworkInfo] = useState<any>(null);
+  const [networkInfo, setNetworkInfo] = useState<{ cluster: string; endpoint: string; version?: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

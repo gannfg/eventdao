@@ -5,14 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import WalletButton from "../../components/WalletButton";
 import { useWalletIntegration } from "../../lib/wallet-integration";
-import SolanaDashboard from "../../components/SolanaDashboard";
+// import SolanaDashboard from "../../components/SolanaDashboard";
 import styles from './page.module.css';
 
 type AdminTab = 'configuration' | 'event-management' | 'user-management' | 'analytics';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>('configuration');
-  const { user: walletUser, isConnected } = useWalletIntegration();
+  const { user: walletUser } = useWalletIntegration();
+  console.log('Admin user:', walletUser); // TODO: Use walletUser in admin functionality
 
   // Configuration state
   const [config, setConfig] = useState({

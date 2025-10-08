@@ -23,32 +23,7 @@ export default function SubmitPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>({ type: null, message: '' });
   const [dragActive, setDragActive] = useState(false);
-  const [testingConnection, setTestingConnection] = useState(false);
-  
   const { user: walletUser, isConnected } = useWalletIntegration();
-
-  const testConnection = async () => {
-    setTestingConnection(true);
-    try {
-      console.log('Testing local functionality...');
-      
-      // Simulate a test
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setSubmitStatus({ 
-        type: 'success', 
-        message: 'Local functionality test passed! (No database required)' 
-      });
-    } catch (err) {
-      console.error('Test error:', err);
-      setSubmitStatus({ 
-        type: 'error', 
-        message: `Test failed: ${err instanceof Error ? err.message : 'Unknown error'}` 
-      });
-    } finally {
-      setTestingConnection(false);
-    }
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

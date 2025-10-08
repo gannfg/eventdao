@@ -4,11 +4,6 @@ import WalletButton from "../components/WalletButton";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const navItems = [
-    { label: "About", href: "#about" },
-    { label: "Demo", href: "#video" },
-    { label: "FAQ", href: "#faq" },
-  ];
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -95,15 +90,15 @@ export default function Home() {
           </details>
           <details className={styles.faqItem}>
             <summary>What is a Proof of Attendance NFT?</summary>
-            <p>It's a collectible NFT that proves you were part of an event. You can keep it as a digital memory or show it off on-chain.</p>
+            <p>It&apos;s a collectible NFT that proves you were part of an event. You can keep it as a digital memory or show it off on-chain.</p>
           </details>
           <details className={styles.faqItem}>
             <summary>Do I need crypto to use EventDAO?</summary>
-            <p>Yes, you'll need a Solana wallet and a small amount of SOL for staking or minting. However, we're working on wallet-free onboarding for new users.</p>
+            <p>Yes, you&apos;ll need a Solana wallet and a small amount of SOL for staking or minting. However, we&apos;re working on wallet-free onboarding for new users.</p>
           </details>
           <details className={styles.faqItem}>
             <summary>Is this gambling or betting?</summary>
-            <p>No. EventDAO uses staking as a way to verify claims — not as a form of gambling. It's about truth verification, transparency, and proof of participation.</p>
+            <p>No. EventDAO uses staking as a way to verify claims — not as a form of gambling. It&apos;s about truth verification, transparency, and proof of participation.</p>
           </details>
           <details className={styles.faqItem}>
             <summary>What kind of events can I submit?</summary>

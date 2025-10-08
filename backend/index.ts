@@ -19,6 +19,5 @@ app.use(errorHandler);
 
 const port = env.PORT;
 app.listen(port, () => {
-  // eslint-disable-next-line no-console
   console.log(`EventDAO backend listening on port ${port}`);
 });

@@ -4,11 +4,10 @@ import {
   Transaction, 
   SystemProgram, 
   LAMPORTS_PER_SOL,
-  sendAndConfirmTransaction,
   TransactionInstruction
 } from '@solana/web3.js';
 import { WalletContextState } from '@solana/wallet-adapter-react';
-import { SolanaConfig, SolanaAccountInfo, TransactionInfo, NetworkInfo } from '@eventdao/shared';
+import { SolanaConfig } from '@eventdao/shared';
 
 // Devnet configuration
 export const SOLANA_CONFIG: SolanaConfig = {

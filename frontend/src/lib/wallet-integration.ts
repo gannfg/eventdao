@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletUser } from '@eventdao/shared';
 import { userService, User } from './user-service';
@@ -25,6 +25,7 @@ export const walletService = {
   }): Promise<WalletUser | null> {
     try {
       // First, try to get existing user
+      console.log('Connection metadata:', connectionMetadata); // Use connectionMetadata
       const existingUser = await userService.getUserByWallet(walletAddress);
       if (existingUser) {
         console.log('✅ Existing user found:', {
@@ -156,7 +157,7 @@ export const useWalletIntegration = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const connectWalletToUser = async () => {
+  const connectWalletToUser = useCallback(async () => {
     if (!publicKey || !connected) {
       setUser(null);
       return;
@@ -193,9 +194,9 @@ export const useWalletIntegration = () => {
     } catch (err) {
       console.error('Wallet integration error:', {
         message: err instanceof Error ? err.message : 'Unknown error',
-        code: (err as any)?.code,
-        details: (err as any)?.details,
-        hint: (err as any)?.hint,
+        code: (err as Record<string, unknown>)?.code,
+        details: (err as Record<string, unknown>)?.details,
+        hint: (err as Record<string, unknown>)?.hint,
         stack: err instanceof Error ? err.stack : undefined,
         walletAddress: publicKey?.toString()
       });
@@ -218,7 +219,7 @@ export const useWalletIntegration = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [publicKey, connected, router]);
 
 
   useEffect(() => {
@@ -227,7 +228,7 @@ export const useWalletIntegration = () => {
     } else {
       setUser(null);
     }
-  }, [connected, publicKey]);
+  }, [connected, publicKey, connectWalletToUser]);
 
   return {
     user,

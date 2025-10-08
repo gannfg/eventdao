@@ -9,7 +9,7 @@ const SolanaDashboard: React.FC = () => {
     isConnected,
     walletAddress,
     user,
-    accountInfo,
+    // accountInfo,
     balance,
     formattedBalance,
     networkInfo,

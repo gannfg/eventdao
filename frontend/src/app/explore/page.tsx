@@ -86,7 +86,7 @@ export default function ExplorePage() {
   const [loading] = useState(false);
   const [error] = useState<string | null>(null);
   const { publicKey } = useWallet();
-  const { user: walletUser, loading: walletLoading } = useWalletIntegration();
+  const { user: walletUser } = useWalletIntegration();
 
   const refetch = () => {
     console.log('Refetch requested (local mode - no database)');

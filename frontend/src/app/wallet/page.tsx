@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import WalletButton from "../../components/WalletButton";
-import { useWalletIntegration } from "../../lib/wallet-integration";
+// import { useWalletIntegration } from "../../lib/wallet-integration";
 import styles from './page.module.css';
 
 interface Transaction {
@@ -63,21 +63,14 @@ const mockTransactions: Transaction[] = [
 ];
 
 export default function WalletPage() {
-  const [selectedAction, setSelectedAction] = useState<string | null>(null);
-  const { user: walletUser, loading: walletLoading, isConnected, walletAddress } = useWalletIntegration();
-  const [transactions] = useState(mockTransactions); // Use mock transactions
-  const [transactionsLoading] = useState(false);
   const [analytics] = useState<Analytics>({
     totalConnections: 0,
     uniqueSessions: 0,
     connectionFrequency: { daily: 0, weekly: 0, monthly: 0 },
     lastConnection: null
   });
-  const [connections] = useState([]);
-  const [connectionsLoading] = useState(false);
 
   const handleQuickAction = (action: string) => {
-    setSelectedAction(action);
     console.log(`Quick action: ${action}`);
     // TODO: Implement quick action logic
   };

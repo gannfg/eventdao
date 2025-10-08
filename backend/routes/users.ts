@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { supabase } from '../config/supabase.js';
-import type { User, CreateUserData, UpdateUserData } from '../config/supabase.js';
+// import type { User, CreateUserData, UpdateUserData } from '../config/supabase.js';
 import { z } from 'zod';
 
 const router = Router();
@@ -93,6 +93,7 @@ router.get('/wallet/:wallet_address', async (req, res) => {
 
     res.json({ user: data });
   } catch (error) {
+    console.error('Error in user creation:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
