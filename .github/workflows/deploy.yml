@@ -32,6 +32,14 @@ jobs:
         echo "NPM version:"
         npm --version
         
+    - name: Setup Shell Compatibility
+      shell: bash
+      run: |
+        echo "Setting up shell compatibility..."
+        sudo ln -sf /bin/bash /bin/sh
+        ls -la /bin/sh
+        echo "Shell setup complete"
+        
     - name: Install dependencies (Frontend)
       shell: bash
       run: |
@@ -48,9 +56,13 @@ jobs:
       shell: bash
       run: |
         cd frontend
-        npm run build
+        export PATH="$PWD/node_modules/.bin:$PATH"
+        export SHELL=/bin/bash
+        which next
+        npx next build
       env:
         PATH: ${{ github.workspace }}/frontend/node_modules/.bin:$PATH
+        SHELL: /bin/bash
         
     - name: Verify Frontend Build
       shell: bash
