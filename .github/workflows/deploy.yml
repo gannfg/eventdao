@@ -60,22 +60,26 @@ jobs:
         echo "Build artifacts created successfully"
         
     - name: Build Backend
+      shell: bash
       run: |
         cd backend
         npm run build
         
     - name: Run Tests (Frontend)
+      shell: bash
       run: |
         cd frontend
         npm run lint
         
     - name: Run Tests (Backend)
+      shell: bash
       run: |
         cd backend
         npm run lint
         
     - name: Check if Vercel deployment should run
       id: should-deploy-vercel
+      shell: bash
       run: |
         if [ -n "$VERCEL_TOKEN" ] && [ -n "$ORG_ID" ] && [ -n "$PROJECT_ID" ]; then
           echo "should-deploy=true" >> $GITHUB_OUTPUT
@@ -83,9 +87,9 @@ jobs:
           echo "should-deploy=false" >> $GITHUB_OUTPUT
         fi
       env:
-        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        ORG_ID: ${{ secrets.ORG_ID }}
-        PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN || '' }}
+        ORG_ID: ${{ secrets.ORG_ID || '' }}
+        PROJECT_ID: ${{ secrets.PROJECT_ID || '' }}
         
     - name: Deploy to Vercel (Frontend)
       if: steps.should-deploy-vercel.outputs.should-deploy == 'true'
@@ -100,11 +104,13 @@ jobs:
         
     - name: Skip Vercel deployment
       if: steps.should-deploy-vercel.outputs.should-deploy == 'false'
+      shell: bash
       run: |
         echo "Skipping Vercel deployment due to missing secrets."
         echo "Please configure VERCEL_TOKEN, ORG_ID, and PROJECT_ID secrets in your GitHub repository settings."
         
     - name: Deploy to Railway (Backend)
+      shell: bash
       run: |
         echo "Backend deployment would go here"
         echo "Configure Railway deployment in your Railway dashboard"
