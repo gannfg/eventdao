@@ -1,10 +1,16 @@
 name: Deploy EventDAO
 
+# PAUSED - Auto deployment disabled
+# Uncomment the lines below to re-enable auto deployment
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
+# Temporary override to disable workflow
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
