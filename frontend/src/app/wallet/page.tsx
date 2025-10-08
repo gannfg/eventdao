@@ -230,7 +230,7 @@ export default function WalletPage() {
             </div>
           </div>
 
-          <div className={styles.statsCard}>
+          <div className={`${styles.statsCard} ${styles.quickActionsCard}`}>
             <h3 className={styles.statsTitle}>Quick Actions</h3>
             <div className={styles.actionsList}>
               <button 

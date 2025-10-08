@@ -204,7 +204,7 @@
 /* Stats Grid */
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   margin-bottom: 32px;
 }
@@ -311,10 +311,20 @@
 }
 
 /* Quick Actions */
+.quickActionsCard {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .actionsList {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  max-width: 300px;
 }
 
 .actionBtn {
@@ -484,6 +494,17 @@
 }
 
 /* Responsive design */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .quickActionsCard {
+    grid-column: span 2;
+  }
+}
+
 @media (max-width: 768px) {
   .page {
     padding: 140px 16px 20px;
@@ -510,6 +531,10 @@
   .statsGrid {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+  
+  .quickActionsCard {
+    grid-column: span 1;
   }
   
   .balanceCard,
