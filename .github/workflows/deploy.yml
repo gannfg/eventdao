@@ -20,17 +20,32 @@ jobs:
         node-version: '20'
         cache: 'npm'
         
+    - name: Check Shell Environment
+      shell: bash
+      run: |
+        echo "Shell check:"
+        which bash
+        which sh
+        ls -la /bin/sh
+        echo "Node version:"
+        node --version
+        echo "NPM version:"
+        npm --version
+        
     - name: Install dependencies (Frontend)
+      shell: bash
       run: |
         cd frontend
         npm ci
         
     - name: Install dependencies (Backend)
+      shell: bash
       run: |
         cd backend
         npm ci
         
     - name: Build Frontend
+      shell: bash
       run: |
         cd frontend
         npm run build
@@ -38,6 +53,7 @@ jobs:
         PATH: ${{ github.workspace }}/frontend/node_modules/.bin:$PATH
         
     - name: Verify Frontend Build
+      shell: bash
       run: |
         cd frontend
         ls -la .next/
