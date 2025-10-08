@@ -22,7 +22,7 @@ export const walletService = {
     userAgent?: string;
     ipAddress?: string;
     walletType?: string;
-  }): Promise<WalletUser | null> {
+  }): Promise<WalletUser> {
     try {
       // First, try to get existing user
       const existingUser = await userService.getUserByWallet(walletAddress);
