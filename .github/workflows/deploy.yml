@@ -23,7 +23,8 @@ jobs:
     - name: Install dependencies (Frontend)
       run: |
         cd frontend
-        npm ci
+        npm install
+        npm list next
         
     - name: Install dependencies (Backend)
       run: |
@@ -33,7 +34,7 @@ jobs:
     - name: Build Frontend
       run: |
         cd frontend
-        npm run build
+        npx next build
         
     - name: Build Backend
       run: |
