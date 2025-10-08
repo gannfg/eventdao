@@ -20,25 +20,27 @@ jobs:
         node-version: '20'
         cache: 'npm'
         
-    - name: Check Shell Environment
+    - name: Check Environment
       shell: bash
       run: |
-        echo "Shell check:"
-        which bash
-        which sh
-        ls -la /bin/sh
-        echo "Node version:"
-        node --version
-        echo "NPM version:"
-        npm --version
+        echo "Environment check:"
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+        echo "Shell: $SHELL"
+        echo "Working directory: $(pwd)"
         
     - name: Setup Shell Compatibility
       shell: bash
       run: |
         echo "Setting up shell compatibility..."
         sudo ln -sf /bin/bash /bin/sh
-        ls -la /bin/sh
         echo "Shell setup complete"
+        
+    - name: Install root dependencies
+      shell: bash
+      run: |
+        echo "Installing root dependencies..."
+        npm ci
         
     - name: Install dependencies (Frontend)
       shell: bash
@@ -55,21 +57,22 @@ jobs:
     - name: Build Frontend
       shell: bash
       run: |
-        cd frontend
-        export PATH="$PWD/node_modules/.bin:$PATH"
-        export SHELL=/bin/bash
-        which next
-        npx next build
+        echo "Building frontend..."
+        npm run build:frontend
       env:
-        PATH: ${{ github.workspace }}/frontend/node_modules/.bin:$PATH
-        SHELL: /bin/bash
+        NODE_ENV: production
         
     - name: Verify Frontend Build
       shell: bash
       run: |
         cd frontend
-        ls -la .next/
-        echo "Build artifacts created successfully"
+        if [ -d ".next" ]; then
+          echo "✅ Build artifacts created successfully"
+          ls -la .next/
+        else
+          echo "❌ Build failed - no .next directory found"
+          exit 1
+        fi
         
     - name: Build Backend
       shell: bash
