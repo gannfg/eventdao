@@ -18,7 +18,14 @@ export const useSolanaDevnet = () => {
   const { user, isConnected, walletAddress } = useWalletIntegration();
   const [accountInfo, setAccountInfo] = useState<SolanaAccountInfo | null>(null);
   const [transactions, setTransactions] = useState<TransactionInfo[]>([]);
-  const [networkInfo, setNetworkInfo] = useState<{ cluster: string; endpoint: string; version?: string } | null>(null);
+  const [networkInfo, setNetworkInfo] = useState<{ 
+    version: string; 
+    currentSlot: number;
+    blockHeight: number;
+    epoch: number;
+    slotIndex: number;
+    slotsInEpoch: number;
+  } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

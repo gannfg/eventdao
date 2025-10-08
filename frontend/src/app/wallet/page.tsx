@@ -69,6 +69,8 @@ export default function WalletPage() {
     connectionFrequency: { daily: 0, weekly: 0, monthly: 0 },
     lastConnection: null
   });
+  const [connections] = useState([]);
+  const [connectionsLoading] = useState(false);
 
   const handleQuickAction = (action: string) => {
     console.log(`Quick action: ${action}`);
