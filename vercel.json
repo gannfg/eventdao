@@ -3,16 +3,5 @@
   "outputDirectory": "frontend/.next",
   "framework": "nextjs",
   "installCommand": "npm ci",
-  "devCommand": "cd frontend && npm run dev",
-  "functions": {
-    "frontend/app/api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ]
+  "devCommand": "cd frontend && npm run dev"
 }
