@@ -1,7 +1,7 @@
-import { supabase } from './supabase';
+// Local mode - no database dependency
 
 // Sample users with Solana wallet addresses
-const sampleUsers = [
+export const sampleUsers = [
   {
     wallet_address: '9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM',
     username: 'CryptoEventPro',
@@ -33,7 +33,7 @@ const sampleUsers = [
 ];
 
 // Sample events
-const sampleEvents = [
+export const sampleEvents = [
   {
     title: 'Coldplay Concert - Jakarta',
     description: 'Coldplay performing their Music of the Spheres World Tour at Gelora Bung Karno Stadium. Expected attendance: 50,000+ fans.',
@@ -115,7 +115,7 @@ const sampleEvents = [
 ];
 
 // Sample transactions
-const sampleTransactions = [
+export const sampleTransactions = [
   {
     user_id: '00000000-0000-0000-0000-000000000000',
     event_id: '00000000-0000-0000-0000-000000000000',
@@ -133,7 +133,7 @@ const sampleTransactions = [
 ];
 
 // Sample stakes
-const sampleStakes = [
+export const sampleStakes = [
   {
     user_id: '00000000-0000-0000-0000-000000000000',
     event_id: '00000000-0000-0000-0000-000000000000',
@@ -148,122 +148,53 @@ const sampleStakes = [
   }
 ];
 
-export const seedDatabase = async () => {
-  try {
-    console.log('🌱 Starting database seeding...');
+// Local mode - return sample data without database operations
+export const getSampleData = () => {
+  console.log('🌱 Loading sample data for local mode...');
+  
+  // Generate mock IDs for local mode
+  const usersWithIds = sampleUsers.map((user, index) => ({
+    ...user,
+    id: `user-${index + 1}`,
+    created_at: new Date().toISOString()
+  }));
 
-    // 1. Insert sample users
-    console.log('👥 Inserting sample users...');
-    const { data: users, error: usersError } = await supabase
-      .from('users')
-      .insert(sampleUsers)
-      .select();
+  const eventsWithIds = sampleEvents.map((event, index) => ({
+    ...event,
+    id: `event-${index + 1}`,
+    user_id: usersWithIds[index % usersWithIds.length].id,
+    created_at: new Date().toISOString()
+  }));
 
-    if (usersError) {
-      console.error('Error inserting users:', usersError);
-      return { success: false, error: usersError.message };
-    }
+  const transactionsWithIds = sampleTransactions.map((transaction, index) => ({
+    ...transaction,
+    id: `transaction-${index + 1}`,
+    user_id: usersWithIds[index % usersWithIds.length].id,
+    event_id: eventsWithIds[index % eventsWithIds.length].id,
+    created_at: new Date().toISOString()
+  }));
 
-    console.log(`✅ Inserted ${users.length} users`);
+  const stakesWithIds = sampleStakes.map((stake, index) => ({
+    ...stake,
+    id: `stake-${index + 1}`,
+    user_id: usersWithIds[index % usersWithIds.length].id,
+    event_id: eventsWithIds[index % eventsWithIds.length].id,
+    created_at: new Date().toISOString()
+  }));
 
-    // 2. Update events with real user IDs
-    const eventsWithUserIds = sampleEvents.map((event, index) => ({
-      ...event,
-      user_id: users[index % users.length].id
-    }));
-
-    // 3. Insert sample events
-    console.log('🎪 Inserting sample events...');
-    const { data: events, error: eventsError } = await supabase
-      .from('events')
-      .insert(eventsWithUserIds)
-      .select();
-
-    if (eventsError) {
-      console.error('Error inserting events:', eventsError);
-      return { success: false, error: eventsError.message };
-    }
-
-    console.log(`✅ Inserted ${events.length} events`);
-
-    // 4. Insert sample transactions
-    console.log('💰 Inserting sample transactions...');
-    const transactionsWithIds = sampleTransactions.map((transaction, index) => ({
-      ...transaction,
-      user_id: users[index % users.length].id,
-      event_id: events[index % events.length].id
-    }));
-
-    const { data: transactions, error: transactionsError } = await supabase
-      .from('transactions')
-      .insert(transactionsWithIds)
-      .select();
-
-    if (transactionsError) {
-      console.error('Error inserting transactions:', transactionsError);
-      return { success: false, error: transactionsError.message };
-    }
-
-    console.log(`✅ Inserted ${transactions.length} transactions`);
-
-    // 5. Insert sample stakes
-    console.log('🎯 Inserting sample stakes...');
-    const stakesWithIds = sampleStakes.map((stake, index) => ({
-      ...stake,
-      user_id: users[index % users.length].id,
-      event_id: events[index % events.length].id
-    }));
-
-    const { data: stakes, error: stakesError } = await supabase
-      .from('stakes')
-      .insert(stakesWithIds)
-      .select();
-
-    if (stakesError) {
-      console.error('Error inserting stakes:', stakesError);
-      return { success: false, error: stakesError.message };
-    }
-
-    console.log(`✅ Inserted ${stakes.length} stakes`);
-
-    console.log('🎉 Database seeding completed successfully!');
-    return { 
-      success: true, 
-      data: {
-        users: users.length,
-        events: events.length,
-        transactions: transactions.length,
-        stakes: stakes.length
-      }
-    };
-
-  } catch (error) {
-    console.error('❌ Database seeding failed:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
-    };
-  }
+  console.log('🎉 Sample data loaded successfully for local mode!');
+  
+  return {
+    users: usersWithIds,
+    events: eventsWithIds,
+    transactions: transactionsWithIds,
+    stakes: stakesWithIds
+  };
 };
 
+// Local mode - no database clearing needed
 export const clearDatabase = async () => {
-  try {
-    console.log('🧹 Clearing database...');
-
-    // Clear in reverse order due to foreign key constraints
-    await supabase.from('stakes').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    await supabase.from('transactions').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    await supabase.from('events').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    await supabase.from('users').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-
-    console.log('✅ Database cleared successfully!');
-    return { success: true };
-
-  } catch (error) {
-    console.error('❌ Database clearing failed:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
-    };
-  }
+  console.log('🧹 Local mode - no database to clear');
+  console.log('✅ Local mode operation completed successfully!');
+  return { success: true };
 };
