@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
-import WalletButton from "../../components/WalletButton";
+import Header from "../../components/Header";
 // import { useWalletIntegration } from "../../lib/wallet-integration";
 import styles from './page.module.css';
 
@@ -102,31 +102,7 @@ export default function WalletPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.brand}>
-          <Image
-            src="/eventdao_letter.png"
-            alt="EventDAO Logo"
-            width={160}
-            height={53}
-            className={styles.brandLogo}
-          />
-          <span className={styles.brandSubtitle}>Solana Web3 Events</span>
-        </div>
-        <nav className={styles.nav}>
-          <Link href="/" className={styles.navLink}>Home</Link>
-          <a href="/submit" className={styles.navLink}>Submit</a>
-          <a href="/explore" className={styles.navLink}>Explore</a>
-          <a href="/leaderboard" className={styles.navLink}>Leaderboard</a>
-          <a href="/wallet" className={`${styles.navLink} ${styles.active}`}>Wallet</a>
-          <a href="/admin" className={styles.navLink}>Admin</a>
-          <a href="/about" className={styles.navLink}>About</a>
-        </nav>
-        <div className={styles.actions}>
-          <button className={styles.initializeBtn}>Initialize DAO</button>
-          <WalletButton className={styles.walletBtn} />
-        </div>
-      </header>
+      <Header currentPage="wallet" />
 
       <div className={styles.container}>
         <div className={styles.pageHeader}>

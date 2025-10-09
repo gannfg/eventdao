@@ -3,3 +3,5 @@ dist/
 .env
 frontend/.next/
 frontend/node_modules/
+
+.vercel

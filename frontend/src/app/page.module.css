@@ -17,6 +17,19 @@
   padding-top: 120px; /* Account for fixed header */
 }
 
+/* Mobile page adjustments */
+@media (max-width: 768px) {
+  .page {
+    padding-top: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding-top: 90px;
+  }
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -39,11 +52,40 @@
   z-index: 1000;
 }
 
+/* Mobile header adjustments */
+@media (max-width: 768px) {
+  .header {
+    padding: 16px 20px;
+    top: 10px;
+    width: calc(100% - 20px);
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 12px 16px;
+    top: 8px;
+    width: calc(100% - 16px);
+    border-radius: 12px;
+  }
+}
+
 .brand { 
   display: flex; 
   flex-direction: column; 
   gap: 4px; 
   align-items: flex-start;
+  flex-shrink: 0;
+}
+
+/* Mobile brand with hamburger menu */
+@media (max-width: 768px) {
+  .brand {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
 }
 .brandLogo {
   height: auto;
@@ -55,11 +97,42 @@
   font-weight: 400;
 }
 
+/* Mobile brand adjustments */
+@media (max-width: 768px) {
+  .brandLogo {
+    width: 120px;
+    height: auto;
+  }
+  .brandSubtitle {
+    font-size: 12px;
+    display: none; /* Hide subtitle on mobile to save space */
+  }
+}
+
+@media (max-width: 480px) {
+  .brandLogo {
+    width: 100px;
+    height: auto;
+  }
+  .brandSubtitle {
+    font-size: 11px;
+    display: none; /* Hide subtitle on mobile to save space */
+  }
+}
+
 .nav { 
   display: flex; 
   gap: 32px; 
   align-items: center;
 }
+
+/* Mobile navigation - hide on small screens */
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+}
+
 .navLink {
   color: rgba(255, 255, 255, 0.8);
   font-size: 16px;
@@ -75,6 +148,20 @@
   display: flex; 
   align-items: center; 
   gap: 16px;
+  flex-shrink: 0;
+}
+
+/* Mobile actions adjustments */
+@media (max-width: 768px) {
+  .actions {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions {
+    gap: 8px;
+  }
 }
 .welcomeMessage {
   color: rgba(255, 255, 255, 0.9);
@@ -84,6 +171,19 @@
 .welcomeMessage .username {
   color: var(--accent);
   font-weight: 600;
+}
+
+/* Mobile welcome message adjustments */
+@media (max-width: 768px) {
+  .welcomeMessage {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcomeMessage {
+    font-size: 12px;
+  }
 }
 
 .walletBtn {
@@ -111,12 +211,44 @@
   box-shadow: 0 0 0 3px rgba(182, 254, 77, 0.3) !important;
 }
 
+/* Mobile wallet button adjustments */
+@media (max-width: 768px) {
+  .walletBtn {
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    gap: 6px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .walletBtn {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+    gap: 4px !important;
+  }
+}
+
 .hero {
   position: relative;
   padding: 120px 24px 120px;
   margin: 48px auto;
   display: grid;
   justify-items: center;
+}
+
+/* Mobile hero adjustments */
+@media (max-width: 768px) {
+  .hero {
+    padding: 80px 16px 80px;
+    margin: 24px auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 60px 12px 60px;
+    margin: 16px auto;
+  }
 }
 
 .heroImage {
@@ -156,6 +288,27 @@
   max-width: 1400px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
+
+/* Mobile footer adjustments */
+@media (max-width: 768px) {
+  .footerBar {
+    margin: 24px 16px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footerBar {
+    margin: 16px 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    gap: 8px;
+  }
+}
 .footerLinks a { text-decoration: underline; text-underline-offset: 3px; }
 
 .featureCard {
@@ -192,6 +345,23 @@
   max-width: 1400px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
+
+/* Mobile section adjustments */
+@media (max-width: 768px) {
+  .section {
+    margin: 24px 16px;
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    margin: 16px 12px;
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+}
 .section h2 { font-size: 32px; margin-bottom: 16px; letter-spacing: -0.02em; }
 .section h3 { font-size: 26px; margin-top: 16px; margin-bottom: 16px; letter-spacing: -0.01em; }
 .section p { opacity: 0.95; line-height: 1.6; }
@@ -209,6 +379,19 @@
   margin: 48px auto;
   padding: 0;
   max-width: 1400px;
+}
+
+/* Mobile roadmap adjustments */
+@media (max-width: 768px) {
+  .roadmapSection {
+    margin: 24px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .roadmapSection {
+    margin: 16px 12px;
+  }
 }
 
 .roadmapContainer {
@@ -267,12 +450,91 @@
   bottom: 15%;
   left: 5%;
 }
+
+/* Mobile roadmap overlay adjustments */
+@media (max-width: 768px) {
+  .roadmapTextOverlay {
+    max-width: 280px;
+    padding: 20px;
+    font-size: 14px;
+  }
+  .roadmapTextOverlay h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .roadmapTextOverlay p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .roadmapTextOverlay {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    max-width: 100%;
+    margin: 16px 0;
+    padding: 16px;
+  }
+  .roadmapTextOverlay h4 {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  .roadmapTextOverlay p {
+    font-size: 12px;
+  }
+}
 .ctaRow { display: flex; gap: 16px; margin-top: 20px; flex-wrap: wrap; }
 .primaryBtn { background: var(--accent); color: #0a1a00; padding: 16px 24px; border-radius: 999px; font-weight: 800; border: 1px solid transparent; transition: transform 0.08s ease, filter 0.2s ease; font-size: 16px; }
+
+/* Mobile button adjustments */
+@media (max-width: 768px) {
+  .ctaRow {
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .primaryBtn {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ctaRow {
+    gap: 8px;
+    margin-top: 12px;
+    flex-direction: column;
+  }
+  .primaryBtn {
+    padding: 12px 16px;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+  }
+}
 .primaryBtn:hover { filter: brightness(1.03); }
 .primaryBtn:active { transform: translateY(1px); }
 .secondaryBtn { background: transparent; color: var(--foreground); border: 1px solid var(--border); padding: 16px 24px; border-radius: 999px; font-weight: 600; transition: background 0.2s ease, border-color 0.2s ease; font-size: 16px; }
 .secondaryBtn:hover { background: var(--surface-2); border-color: rgba(255,255,255,0.25); }
+
+/* Mobile secondary button adjustments */
+@media (max-width: 768px) {
+  .secondaryBtn {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .secondaryBtn {
+    padding: 12px 16px;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+  }
+}
 
 /* Video placeholder */
 .videoFrame {

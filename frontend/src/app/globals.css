@@ -102,14 +102,15 @@ small { opacity: 0.8; }
   border-radius: 12px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  min-width: 160px;
+  min-width: 180px;
+  width: max-content;
   overflow: hidden;
 }
 
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 20px;
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.8);
@@ -118,6 +119,7 @@ small { opacity: 0.8; }
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .dropdown-item:hover {
@@ -127,4 +129,30 @@ small { opacity: 0.8; }
 
 .dropdown-item:first-child {
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+/* Mobile dropdown adjustments */
+@media (max-width: 768px) {
+  .wallet-dropdown {
+    min-width: 160px;
+    margin-top: 6px;
+  }
+  
+  .dropdown-item {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-dropdown {
+    min-width: 140px;
+    margin-top: 4px;
+    right: -10px;
+  }
+  
+  .dropdown-item {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
 }
