@@ -112,19 +112,19 @@ export default function Home() {
             <h4>Phase 3 — Global Standard</h4>
             <p>Establish EventDAO as the universal standard for verifiable event attendance. Scale to millions of events worldwide, with seamless integration across all major platforms and industries.</p>
           </div>
-          <div className={styles.roadmapMobileContainer}>
-            <div className={styles.roadmapMobilePhase}>
-              <h4>Phase 1 — Foundation</h4>
-              <p>Core event verification system with staking mechanics, automatic resolution through APIs, and NFT proof-of-attendance minting. Building the essential infrastructure for trustless event verification.</p>
-            </div>
-            <div className={styles.roadmapMobilePhase}>
-              <h4>Phase 2 — Ecosystem</h4>
-              <p>Partner with event organizers, venues, and ticketing platforms. Launch community leaderboards, achievement systems, and sponsor partnerships. Expand beyond crypto-native events.</p>
-            </div>
-            <div className={styles.roadmapMobilePhase}>
-              <h4>Phase 3 — Global Standard</h4>
-              <p>Establish EventDAO as the universal standard for verifiable event attendance. Scale to millions of events worldwide, with seamless integration across all major platforms and industries.</p>
-            </div>
+        </div>
+        <div className={styles.roadmapMobilePhases}>
+          <div className={styles.roadmapMobilePhase}>
+            <h4>Phase 1 — Foundation</h4>
+            <p>Core event verification system with staking mechanics, automatic resolution through APIs, and NFT proof-of-attendance minting. Building the essential infrastructure for trustless event verification.</p>
+          </div>
+          <div className={styles.roadmapMobilePhase}>
+            <h4>Phase 2 — Ecosystem</h4>
+            <p>Partner with event organizers, venues, and ticketing platforms. Launch community leaderboards, achievement systems, and sponsor partnerships. Expand beyond crypto-native events.</p>
+          </div>
+          <div className={styles.roadmapMobilePhase}>
+            <h4>Phase 3 — Global Standard</h4>
+            <p>Establish EventDAO as the universal standard for verifiable event attendance. Scale to millions of events worldwide, with seamless integration across all major platforms and industries.</p>
           </div>
         </div>
       </section>
