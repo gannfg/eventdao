@@ -436,17 +436,17 @@
   margin: 0;
 }
 
-.roadmapTextOverlay1 {
+.roadmapTextOverlay[data-phase="1"] {
   top: 30%;
   left: 5%;
 }
 
-.roadmapTextOverlay2 {
+.roadmapTextOverlay[data-phase="2"] {
   top: 45%;
   right: 5%;
 }
 
-.roadmapTextOverlay3 {
+.roadmapTextOverlay[data-phase="3"] {
   bottom: 15%;
   left: 5%;
 }
@@ -468,22 +468,51 @@
 }
 
 @media (max-width: 480px) {
+  /* Hide desktop overlays on mobile */
   .roadmapTextOverlay {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
+    display: none;
+  }
+}
+
+/* Mobile roadmap container - hidden by default */
+.roadmapMobileContainer {
+  display: none;
+}
+
+/* Show mobile container on small screens */
+@media (max-width: 480px) {
+  .roadmapMobileContainer {
+    display: block;
+    margin-top: 24px;
+    padding: 0 16px;
+  }
+  
+  .roadmapMobilePhase {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
     max-width: 100%;
-    margin: 16px 0;
-    padding: 16px;
   }
-  .roadmapTextOverlay h4 {
-    font-size: 15px;
-    margin-bottom: 8px;
+  
+  .roadmapMobilePhase:last-child {
+    margin-bottom: 0;
   }
-  .roadmapTextOverlay p {
-    font-size: 12px;
+  
+  .roadmapMobilePhase h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+  
+  .roadmapMobilePhase p {
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.9;
+    margin: 0;
   }
 }
 .ctaRow { display: flex; gap: 16px; margin-top: 20px; flex-wrap: wrap; }
