@@ -1,7 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import Header from "../components/Header";
+import dynamic from "next/dynamic";
 import styles from "./page.module.css";
+
+// Dynamic import for Header to reduce initial bundle size
+const Header = dynamic(() => import("../components/Header"), {
+  ssr: true,
+  loading: () => <div style={{ height: "120px" }} />
+});
 
 export default function Home() {
   return (
@@ -17,6 +23,9 @@ export default function Home() {
             height={750}
             priority
             className={styles.heroImageContent}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1000px"
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
           />
         </div>
       </main>
@@ -49,6 +58,7 @@ export default function Home() {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
+            loading="lazy"
           />
         </div>
       </section>

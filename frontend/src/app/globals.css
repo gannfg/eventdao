@@ -29,13 +29,20 @@ body {
 
 body {
   color: var(--foreground);
-  background: url('/eventdao_background.png') center/cover no-repeat fixed,
-              var(--background);
+  background: var(--background);
+  background-image: url('/eventdao_background.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-attachment: scroll; /* Fallback for mobile */
+  font-display: swap;
+  /* Optimize rendering */
+  will-change: auto;
+  transform: translateZ(0);
 }
 
 /* Optimize background for different screen sizes */
@@ -50,6 +57,30 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+/* Performance optimizations */
+*,
+*::before,
+*::after {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  content-visibility: auto;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 a {
