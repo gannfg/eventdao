@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../../components/Header";
 import { useWalletIntegration } from "../../lib/wallet-integration";
+import { useRouter } from 'next/navigation';
+import { isAdminWallet, getAdminWalletDisplay } from "../../lib/admin-auth";
 // import SolanaDashboard from "../../components/SolanaDashboard";
 import styles from './page.module.css';
 
@@ -12,8 +14,37 @@ type AdminTab = 'configuration' | 'event-management' | 'user-management' | 'anal
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>('configuration');
-  const { user: walletUser } = useWalletIntegration();
-  console.log('Admin user:', walletUser); // TODO: Use walletUser in admin functionality
+  const { user: walletUser, walletAddress, isConnected, loading } = useWalletIntegration();
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  // Check admin authorization
+  useEffect(() => {
+    if (!loading) {
+      if (!isConnected || !walletAddress) {
+        setIsAuthorized(false);
+        setIsCheckingAuth(false);
+        return;
+      }
+
+      if (isAdminWallet(walletAddress)) {
+        setIsAuthorized(true);
+        console.log('✅ Admin access granted for:', walletAddress);
+      } else {
+        setIsAuthorized(false);
+        console.log('❌ Admin access denied for:', walletAddress);
+      }
+      setIsCheckingAuth(false);
+    }
+  }, [isConnected, walletAddress, loading]);
+
+  // Redirect unauthorized users
+  useEffect(() => {
+    if (!isCheckingAuth && !isAuthorized) {
+      router.push('/');
+    }
+  }, [isCheckingAuth, isAuthorized, router]);
 
   // Configuration state
   const [config, setConfig] = useState({
@@ -210,6 +241,60 @@ export default function AdminPage() {
     }
   };
 
+  // Show loading state while checking authorization
+  if (isCheckingAuth || loading) {
+    return (
+      <div className={styles.page}>
+        <Header currentPage="admin" />
+        <div className={styles.container}>
+          <div className={styles.pageHeader}>
+            <h1 className={styles.title}>Admin Panel</h1>
+            <p className={styles.subtitle}>Checking authorization...</p>
+          </div>
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div style={{ fontSize: '1.2rem', color: 'var(--foreground)' }}>
+              🔐 Verifying admin access...
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render admin content for unauthorized users
+  if (!isAuthorized) {
+    return (
+      <div className={styles.page}>
+        <Header currentPage="admin" />
+        <div className={styles.container}>
+          <div className={styles.pageHeader}>
+            <h1 className={styles.title}>Access Denied</h1>
+            <p className={styles.subtitle}>You don't have permission to access the admin panel</p>
+          </div>
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div style={{ fontSize: '1.2rem', color: 'var(--accent)' }}>
+              ❌ Unauthorized Access
+            </div>
+            <p style={{ marginTop: '1rem', color: 'var(--foreground)' }}>
+              Only authorized administrators can access this panel.
+            </p>
+            <Link href="/" style={{ 
+              display: 'inline-block', 
+              marginTop: '1rem', 
+              padding: '0.5rem 1rem', 
+              backgroundColor: 'var(--brand)', 
+              color: 'white', 
+              textDecoration: 'none', 
+              borderRadius: '8px' 
+            }}>
+              Return to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.page}>
       <Header currentPage="admin" />
@@ -220,6 +305,14 @@ export default function AdminPage() {
           <p className={styles.subtitle}>
             Manage Solana integration, run tests, and configure system settings
           </p>
+          <div style={{ 
+            marginTop: '0.5rem', 
+            fontSize: '0.9rem', 
+            color: 'var(--accent)',
+            fontFamily: 'monospace'
+          }}>
+            Admin: {getAdminWalletDisplay(walletAddress)}
+          </div>
         </div>
 
         {/* Tab Navigation */}
