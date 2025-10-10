@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import styles from "./page.module.css";
+import Footer from "../components/Footer";
 
 // Dynamic import for Header to reduce initial bundle size
 const Header = dynamic(() => import("../components/Header"), {
@@ -139,25 +140,28 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className={styles.footerBar}>
-        <span>Built on Solana • Powered by Community</span>
-        <span className={styles.footerLinks}>
-          <a href="#">Launch App</a>
-          <span> | </span>
-          <a href="#">Docs</a>
-          <span> | </span>
-          <a href="#">Join Discord</a>
-        </span>
-      </footer>
-
-      <section className={styles.section} id="cta">
-        <h3>🚀 Join the Movement</h3>
-        <p>Build public trust through verifiable events. Submit your claim, verify with the community, and collect your digital proof of attendance on Solana.</p>
-        <div className={styles.ctaRow}>
-          <a className={styles.primaryBtn} href="/submit">Submit a Claim</a>
-          <a className={styles.secondaryBtn} href="/explore">Explore Claims</a>
+      <section className={styles.joinMovementSection} id="cta">
+        <div className={styles.joinMovementContainer}>
+          <div className={styles.illustrationContainer}>
+            <Image
+              src="/join_the_movement.png"
+              alt="Join the Movement Illustration"
+              width={600}
+              height={450}
+              className={styles.illustration}
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 600px"
+            />
+            
+            <div className={styles.overlayButtons}>
+              <a className={styles.primaryBtn} href="/submit">Submit a Claim</a>
+              <a className={styles.secondaryBtn} href="/explore">Explore Claims</a>
+            </div>
+          </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }
