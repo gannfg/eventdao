@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './MobileMenu.module.css';
+import { isAdminEnabled } from '../utils/environment';
 
 const MobileMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +40,7 @@ const MobileMenu: React.FC = () => {
     { href: '/explore', label: 'Explore' },
     { href: '/leaderboard', label: 'Leaderboard' },
     { href: '/wallet', label: 'Wallet' },
-    { href: '/admin', label: 'Admin' },
+    ...(isAdminEnabled() ? [{ href: '/admin', label: 'Admin' }] : []),
     { href: '/about', label: 'About' }
   ];
 

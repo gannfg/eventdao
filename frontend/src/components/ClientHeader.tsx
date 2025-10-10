@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import styles from "./Header.module.css";
+import { isAdminEnabled } from "../utils/environment";
 
 // Dynamic imports for wallet-related components
 const WalletButton = dynamic(() => import("./WalletButton"), {
@@ -54,7 +55,9 @@ export default function ClientHeader({ currentPage, className }: HeaderProps) {
         <a href="/explore" className={`${styles.navLink} ${getActiveClass('explore')}`}>Explore</a>
         <a href="/leaderboard" className={`${styles.navLink} ${getActiveClass('leaderboard')}`}>Leaderboard</a>
         <a href="/wallet" className={`${styles.navLink} ${getActiveClass('wallet')}`}>Wallet</a>
-        <a href="/admin" className={`${styles.navLink} ${getActiveClass('admin')}`}>Admin</a>
+        {isAdminEnabled() && (
+          <a href="/admin" className={`${styles.navLink} ${getActiveClass('admin')}`}>Admin</a>
+        )}
         <a href="/about" className={`${styles.navLink} ${getActiveClass('about')}`}>About</a>
       </nav>
       <div className={styles.actions}>
