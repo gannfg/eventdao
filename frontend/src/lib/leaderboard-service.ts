@@ -348,7 +348,7 @@ export class LeaderboardService {
       const totalEvtProfit = profitData?.reduce((sum, user) => sum + (user.total_evt_profit || 0), 0) || 0;
 
       // Estimate total stakes from EVT profit data
-      const totalStakes = Math.max(totalEvtProfit * 2, totalUsers * 10);
+      const totalStakes = Math.max(totalEvtProfit * 2, (totalUsers || 0) * 10);
 
       // Get active authors (users with any SOL bonds)
       const { count: activeAuthors } = await supabase
