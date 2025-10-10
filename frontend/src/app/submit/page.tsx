@@ -6,6 +6,7 @@ import Link from "next/link";
 import Header from "../../components/Header";
 import { useWalletIntegration } from "../../lib/wallet-integration";
 import { EventFormData, SubmitStatus } from '@eventdao/shared';
+import { EventService } from '../../lib/event-service';
 import styles from './page.module.css';
 
 export default function SubmitPage() {
@@ -108,32 +109,24 @@ export default function SubmitPage() {
       const eventData = {
         title: formData.title,
         description: formData.description,
+        event_url: formData.eventUrl || undefined,
         date: new Date(formData.eventDate).toISOString(),
         location: formData.location,
         category: formData.category,
-        status: 'active' as const,
-        authentic_stake: 0,
-        hoax_stake: 0,
         bond: formData.bondAmount,
-        time_left: calculateTimeLeft(formData.eventDate),
         user_id: walletUser.id
       };
 
-      console.log('Event data prepared locally:', eventData);
+      console.log('Creating event with data:', eventData);
+      console.log('Files to upload:', formData.photos.map(f => f.name));
       
-      // Simulate event creation (no database)
-      const mockEventId = `local_event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      console.log('Event created locally with ID:', mockEventId);
-      
-      // TODO: Handle photos locally
-      if (formData.photos.length > 0) {
-        console.log('Photos to handle locally:', formData.photos.map(f => f.name));
-        // Photo handling logic would go here
-      }
+      // Create event with Supabase
+      const createdEvent = await EventService.createEvent(eventData, formData.photos);
+      console.log('Event created successfully:', createdEvent);
 
       setSubmitStatus({ 
         type: 'success', 
-        message: `Event "${formData.title}" submitted successfully! Event ID: ${mockEventId}. (Local submission - no database)` 
+        message: `Event "${formData.title}" submitted successfully! Event ID: ${createdEvent.id}. ${formData.photos.length > 0 ? `${formData.photos.length} files uploaded.` : ''}` 
       });
       
       // Reset form

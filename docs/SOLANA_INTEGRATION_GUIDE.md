@@ -18,13 +18,13 @@ Your EventDAO project now has a complete Solana integration configured for devne
 
 3. **Connect your wallet:**
    - Click "Connect Wallet" 
-   - Choose Phantom or Solflare wallet
+   - Choose Phantom wallet
    - Approve the connection
 
 ## Features
 
 ### ✅ Wallet Connection
-- Support for Phantom and Solflare wallets
+- Support for Phantom wallet
 - Auto-connection on page load
 - Connection status display
 

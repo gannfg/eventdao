@@ -29,7 +29,7 @@ EventDAO/
 ## Features
 
 ### ✅ **Working Features**
-- **Wallet Integration**: Connect Solana wallets (Phantom, Solflare, etc.)
+- **Wallet Integration**: Connect Solana wallets (Phantom, etc.)
 - **Event Submission**: Submit events for verification (local mode)
 - **Event Browsing**: Explore submitted events (mock data)
 - **Wallet Dashboard**: View wallet information and transactions (local mode)

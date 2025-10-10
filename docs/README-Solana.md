@@ -97,7 +97,6 @@ const signature = await requestAirdrop(publicKey, 1); // 1 SOL
 
 The integration supports:
 - **Phantom Wallet**
-- **Solflare Wallet**
 - Auto-connection on page load
 - Modal wallet selection
 
@@ -117,7 +116,7 @@ The integration supports:
 ## Testing
 
 For testing on devnet:
-1. Connect your wallet (Phantom/Solflare)
+1. Connect your wallet (Phantom)
 2. Use the airdrop function to get free SOL
 3. Test sending SOL between addresses
 4. Check transaction history in the dashboard

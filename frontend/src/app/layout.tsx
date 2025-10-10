@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import dynamic from "next/dynamic";
+import ClientWalletProvider from "../components/ClientWalletProvider";
 
 // Optimize font loading with display swap
 const geistSans = Geist({
@@ -18,15 +18,6 @@ const geistMono = Geist_Mono({
   preload: false, // Only preload the primary font
 });
 
-// Dynamic import for wallet provider to reduce initial bundle size
-const WalletContextProvider = dynamic(
-  () => import("../components/WalletProvider"),
-  { 
-    ssr: false,
-    loading: () => <div style={{ minHeight: "100vh" }} /> 
-  }
-);
-
 export const metadata: Metadata = {
   title: "EventDAO - Proof of Event on Solana",
   description: "EventDAO lets you prove that real-world events truly happened — verified on Solana, rewarded with NFTs.",
@@ -37,7 +28,6 @@ export const metadata: Metadata = {
     apple: "/eventdao_favicon.png",
   },
   manifest: "/manifest.json",
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
   openGraph: {
     title: "EventDAO - Proof of Event on Solana",
@@ -52,6 +42,11 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -63,9 +58,9 @@ export default function RootLayout({
         <link rel="icon" href="/eventdao_favicon.png" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <WalletContextProvider>
+        <ClientWalletProvider>
           {children}
-        </WalletContextProvider>
+        </ClientWalletProvider>
       </body>
     </html>
   );

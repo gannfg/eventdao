@@ -264,9 +264,13 @@
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
-  padding: 24px;
+  padding: 0;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
 }
 
 .eventCard:hover {
@@ -275,10 +279,60 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
+/* Image Preview Styles */
+.imagePreview {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.eventCard:hover .previewImage {
+  transform: scale(1.05);
+}
+
+/* Image Placeholder Styles */
+.imagePlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(182, 254, 77, 0.1), rgba(76, 125, 255, 0.1));
+  color: rgba(255, 255, 255, 0.6);
+}
+
+
+.placeholderIcon {
+  font-size: 48px;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.placeholderText {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
 .cardHeader {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 16px;
+  padding: 0 24px;
+  padding-top: 24px;
 }
 
 .statusBadge {
@@ -310,6 +364,7 @@
 
 .cardContent {
   margin-bottom: 24px;
+  padding: 0 24px;
 }
 
 .eventTitle {
@@ -393,6 +448,7 @@
 .cardActions {
   display: flex;
   gap: 12px;
+  padding: 0 24px 24px;
 }
 
 .stakeBtn {
@@ -493,7 +549,24 @@
   }
   
   .eventCard {
-    padding: 20px;
+    padding: 0;
+  }
+  
+  .imagePreview {
+    height: 160px;
+  }
+  
+  .cardHeader {
+    padding: 0 20px;
+    padding-top: 20px;
+  }
+  
+  .cardContent {
+    padding: 0 20px;
+  }
+  
+  .cardActions {
+    padding: 0 20px 20px;
   }
   
   .stakingInfo {
@@ -530,5 +603,295 @@
   .categoryBtn {
     padding: 8px 12px;
     font-size: 12px;
+  }
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modalContent {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0;
+  margin-bottom: 20px;
+}
+
+.modalTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.closeButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 1);
+}
+
+.modalBody {
+  padding: 0 24px 24px;
+}
+
+.modalImagePreview {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.modalImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modalImagePlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(182, 254, 77, 0.1), rgba(76, 125, 255, 0.1));
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.modalPlaceholderIcon {
+  font-size: 64px;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+.modalPlaceholderText {
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.modalDescription {
+  margin-bottom: 24px;
+}
+
+.modalDescription p {
+  font-size: 16px;
+  line-height: 1.6;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.modalDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.modalDetailItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.modalDetailIcon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.modalDetailItem a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.modalDetailItem a:hover {
+  text-decoration: underline;
+}
+
+.modalStakingInfo {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.modalStakeItem {
+  text-align: center;
+}
+
+.modalStakeAmount {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.modalStakeItem:first-child .modalStakeAmount {
+  color: #b6fe4d;
+}
+
+.modalStakeItem:last-child .modalStakeAmount {
+  color: #f44336;
+}
+
+.modalStakeLabel {
+  font-size: 14px;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modalBondInfo {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.modalTimeLeft {
+  font-size: 16px;
+  color: #ff9800;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.modalActions {
+  display: flex;
+  gap: 16px;
+  padding: 0 24px 24px;
+}
+
+.modalStakeBtn {
+  flex: 1;
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.modalStakeBtn:first-child {
+  background: #b6fe4d;
+  color: #0a1a00;
+}
+
+.modalStakeBtn:first-child:hover {
+  background: #a8e85a;
+  transform: translateY(-1px);
+}
+
+.modalHoaxBtn {
+  background: #f44336;
+  color: white;
+}
+
+.modalHoaxBtn:hover {
+  background: #da190b;
+  transform: translateY(-1px);
+}
+
+/* Mobile Modal Styles */
+@media (max-width: 768px) {
+  .modalOverlay {
+    padding: 16px;
+  }
+  
+  .modalContent {
+    max-height: 95vh;
+  }
+  
+  .modalHeader {
+    padding: 20px 20px 0;
+  }
+  
+  .modalTitle {
+    font-size: 20px;
+  }
+  
+  .modalBody {
+    padding: 0 20px 20px;
+  }
+  
+  .modalImagePreview {
+    height: 200px;
+  }
+  
+  .modalStakingInfo {
+    gap: 24px;
+  }
+  
+  .modalStakeAmount {
+    font-size: 20px;
+  }
+  
+  .modalActions {
+    padding: 0 20px 20px;
+    flex-direction: column;
+  }
+  
+  .modalStakeBtn {
+    padding: 14px 16px;
+    font-size: 14px;
   }
 }

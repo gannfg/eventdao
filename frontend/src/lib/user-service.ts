@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api';
+import { supabase } from './supabase';
 
 export interface User {
   id: string;
@@ -21,46 +21,22 @@ export interface ApiResponse<T = unknown> {
 }
 
 class UserService {
-  private async makeRequest<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-    
-    const defaultOptions: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-    };
-
-    const response = await fetch(url, {
-      ...defaultOptions,
-      ...options,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    return response.json();
-  }
-
   async getUserByWallet(walletAddress: string): Promise<User | null> {
     try {
-      const response = await fetch(`${API_BASE_URL}/users/wallet/${walletAddress}`);
-      
-      if (!response.ok) {
-        if (response.status === 404) {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('wallet_address', walletAddress)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
           return null; // User not found
         }
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(error.message);
       }
-      
-      const data = await response.json();
-      return data.user;
+
+      return data;
     } catch (error) {
       if (error instanceof Error && (error.message.includes('404') || error.message.includes('User not found'))) {
         return null;
@@ -70,24 +46,54 @@ class UserService {
   }
 
   async createUser(userData: CreateUserRequest): Promise<User> {
-    const response = await this.makeRequest<{ user: User }>('/users', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
-    return response.user;
+    const { data, error } = await supabase
+      .from('users')
+      .insert([userData])
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === '23505') {
+        throw new Error('User with this username or wallet address already exists');
+      }
+      throw new Error(error.message);
+    }
+
+    return data;
   }
 
   async updateUser(id: string, userData: Partial<CreateUserRequest>): Promise<User> {
-    const response = await this.makeRequest<{ user: User }>(`/users/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(userData),
-    });
-    return response.user;
+    const { data, error } = await supabase
+      .from('users')
+      .update(userData)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error('User not found');
+      }
+      if (error.code === '23505') {
+        throw new Error('User with this username or wallet address already exists');
+      }
+      throw new Error(error.message);
+    }
+
+    return data;
   }
 
   async getAllUsers(): Promise<User[]> {
-    const response = await this.makeRequest<{ users: User[] }>('/users');
-    return response.users;
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data || [];
   }
 }
 

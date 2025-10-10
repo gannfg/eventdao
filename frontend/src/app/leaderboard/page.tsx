@@ -1,109 +1,56 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../../components/Header";
+import { leaderboardService } from "../../lib/leaderboard-service";
+import { 
+  LeaderboardVerifier, 
+  LeaderboardAuthor, 
+  LeaderboardProfitMaker, 
+  LeaderboardStats 
+} from '@eventdao/shared';
 import styles from './page.module.css';
-
-interface Verifier {
-  id: string;
-  address: string;
-  wins: number;
-  losses: number;
-  accuracy: number;
-  solEarned: number;
-  reputation: number;
-}
-
-interface Author {
-  id: string;
-  address: string;
-  submitted: number;
-  verified: number;
-  solEarned: number;
-  reputation: number;
-}
-
-const mockVerifiers: Verifier[] = [
-  {
-    id: '1',
-    address: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
-    wins: 24,
-    losses: 2,
-    accuracy: 95.2,
-    solEarned: 12.5,
-    reputation: 1250
-  },
-  {
-    id: '2',
-    address: '9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM',
-    wins: 18,
-    losses: 3,
-    accuracy: 92.1,
-    solEarned: 8.7,
-    reputation: 980
-  },
-  {
-    id: '3',
-    address: '5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1',
-    wins: 22,
-    losses: 1,
-    accuracy: 97.8,
-    solEarned: 15.2,
-    reputation: 920
-  },
-  {
-    id: '4',
-    address: '3xJLu2g5qLxW8vQZ9mNpR7sT6uY4iE2wA1bC5dF8gH3j',
-    wins: 15,
-    losses: 4,
-    accuracy: 88.9,
-    solEarned: 6.8,
-    reputation: 850
-  },
-  {
-    id: '5',
-    address: '8kM9nL2pQ4rS7tU1vW3xY6zA9bE5cF2gH8jK4mN7pQ1s',
-    wins: 20,
-    losses: 2,
-    accuracy: 94.3,
-    solEarned: 9.3,
-    reputation: 780
-  }
-];
-
-const mockAuthors: Author[] = [
-  {
-    id: '1',
-    address: '4kM9nL2pQ4rS7tU1vW3xY6zA9bE5cF2gH8jK4mN7pQ1s',
-    submitted: 8,
-    verified: 7,
-    solEarned: 4.2,
-    reputation: 1100
-  },
-  {
-    id: '2',
-    address: '6xJLu2g5qLxW8vQZ9mNpR7sT6uY4iE2wA1bC5dF8gH3j',
-    submitted: 6,
-    verified: 5,
-    solEarned: 3.1,
-    reputation: 950
-  },
-  {
-    id: '3',
-    address: '2Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1',
-    submitted: 5,
-    verified: 4,
-    solEarned: 2.8,
-    reputation: 820
-  }
-];
 
 const timeFilters = ['All Time', 'This Month', 'This Week'];
 
 export default function LeaderboardPage() {
   const [selectedFilter, setSelectedFilter] = useState('All Time');
+  const [verifiers, setVerifiers] = useState<LeaderboardVerifier[]>([]);
+  const [authors, setAuthors] = useState<LeaderboardAuthor[]>([]);
+  const [profitMakers, setProfitMakers] = useState<LeaderboardProfitMaker[]>([]);
+  const [stats, setStats] = useState<LeaderboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchLeaderboardData();
+  }, [selectedFilter]);
+
+  const fetchLeaderboardData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [verifiersData, authorsData, profitMakersData, statsData] = await Promise.all([
+        leaderboardService.getTopVerifiers(10, selectedFilter.toLowerCase().replace(' ', '_')),
+        leaderboardService.getTopAuthors(10, selectedFilter.toLowerCase().replace(' ', '_')),
+        leaderboardService.getTopProfitMakers(10, selectedFilter.toLowerCase().replace(' ', '_')),
+        leaderboardService.getLeaderboardStats()
+      ]);
+
+      setVerifiers(verifiersData);
+      setAuthors(authorsData);
+      setProfitMakers(profitMakersData);
+      setStats(statsData);
+    } catch (err) {
+      console.error('Error fetching leaderboard data:', err);
+      setError('Failed to load leaderboard data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
@@ -144,84 +91,135 @@ export default function LeaderboardPage() {
           ))}
         </div>
 
-        <div className={styles.leaderboardGrid}>
-          <div className={styles.leaderboardSection}>
-            <h2 className={styles.sectionTitle}>Top Verifiers</h2>
-            <div className={styles.leaderboardList}>
-              {mockVerifiers.map((verifier, index) => (
-                <div key={verifier.id} className={styles.leaderboardItem}>
-                  <div className={styles.rankContainer}>
-                    <div className={`${styles.rankBadge} ${getRankColor(index + 1)}`}>
-                      {index + 1}
+        {loading ? (
+          <div className={styles.loadingContainer}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Loading leaderboard data...</p>
+          </div>
+        ) : error ? (
+          <div className={styles.errorContainer}>
+            <p className={styles.errorMessage}>{error}</p>
+            <button className={styles.retryButton} onClick={fetchLeaderboardData}>
+              Retry
+            </button>
+          </div>
+        ) : (
+          <div className={styles.leaderboardGrid}>
+            <div className={styles.leaderboardSection}>
+              <h2 className={styles.sectionTitle}>Top Verifiers</h2>
+              <div className={styles.leaderboardList}>
+                {verifiers.length > 0 ? verifiers.map((verifier, index) => (
+                  <div key={verifier.id} className={styles.leaderboardItem}>
+                    <div className={styles.rankContainer}>
+                      <div className={`${styles.rankBadge} ${getRankColor(index + 1)}`}>
+                        {index + 1}
+                      </div>
+                    </div>
+                    <div className={styles.userInfo}>
+                      <div className={styles.address}>
+                        {verifier.username || formatAddress(verifier.wallet_address)}
+                      </div>
+                      <div className={styles.stats}>
+                        <span>{verifier.verification_wins}W/{verifier.verification_losses}L</span>
+                        <span>•</span>
+                        <span>{verifier.verification_accuracy}% accuracy</span>
+                      </div>
+                    </div>
+                    <div className={styles.earnings}>
+                      <div className={styles.solAmount}>{verifier.sol_earned} SOL</div>
+                      <div className={styles.reputation}>{verifier.reputation} rep</div>
                     </div>
                   </div>
-                  <div className={styles.userInfo}>
-                    <div className={styles.address}>
-                      {formatAddress(verifier.address)}
+                )) : (
+                  <div className={styles.emptyState}>No verifiers found</div>
+                )}
+              </div>
+            </div>
+
+            <div className={styles.leaderboardSection}>
+              <h2 className={styles.sectionTitle}>Top Authors</h2>
+              <div className={styles.leaderboardList}>
+                {authors.length > 0 ? authors.map((author, index) => (
+                  <div key={author.id} className={styles.leaderboardItem}>
+                    <div className={styles.rankContainer}>
+                      <div className={`${styles.rankBadge} ${getRankColor(index + 1)}`}>
+                        {index + 1}
+                      </div>
                     </div>
-                    <div className={styles.stats}>
-                      <span>{verifier.wins}W/{verifier.losses}L</span>
-                      <span>•</span>
-                      <span>{verifier.accuracy}% accuracy</span>
+                    <div className={styles.userInfo}>
+                      <div className={styles.address}>
+                        {author.username || formatAddress(author.wallet_address)}
+                      </div>
+                      <div className={styles.stats}>
+                        <span>{author.events_submitted} submitted</span>
+                        <span>•</span>
+                        <span>{author.events_verified} verified</span>
+                      </div>
+                    </div>
+                    <div className={styles.earnings}>
+                      <div className={styles.solAmount}>{author.total_sol_bonds} SOL</div>
+                      <div className={styles.reputation}>{author.reputation} rep</div>
                     </div>
                   </div>
-                  <div className={styles.earnings}>
-                    <div className={styles.solAmount}>{verifier.solEarned} SOL</div>
-                    <div className={styles.reputation}>{verifier.reputation} rep</div>
+                )) : (
+                  <div className={styles.emptyState}>No authors found</div>
+                )}
+              </div>
+            </div>
+
+            <div className={styles.leaderboardSection}>
+              <h2 className={styles.sectionTitle}>Top Profit Makers</h2>
+              <div className={styles.leaderboardList}>
+                {profitMakers.length > 0 ? profitMakers.map((profitMaker, index) => (
+                  <div key={profitMaker.id} className={styles.leaderboardItem}>
+                    <div className={styles.rankContainer}>
+                      <div className={`${styles.rankBadge} ${getRankColor(index + 1)}`}>
+                        {index + 1}
+                      </div>
+                    </div>
+                    <div className={styles.userInfo}>
+                      <div className={styles.address}>
+                        {profitMaker.username || formatAddress(profitMaker.wallet_address)}
+                      </div>
+                      <div className={styles.stats}>
+                        <span>{profitMaker.total_stakes} stakes</span>
+                        <span>•</span>
+                        <span>{profitMaker.win_rate}% win rate</span>
+                      </div>
+                    </div>
+                    <div className={styles.earnings}>
+                      <div className={styles.evtAmount}>{profitMaker.total_evt_profit} EVT</div>
+                      <div className={styles.reputation}>{profitMaker.reputation} rep</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )) : (
+                  <div className={styles.emptyState}>No profit makers found</div>
+                )}
+              </div>
             </div>
           </div>
+        )}
 
-          <div className={styles.leaderboardSection}>
-            <h2 className={styles.sectionTitle}>Top Authors</h2>
-            <div className={styles.leaderboardList}>
-              {mockAuthors.map((author, index) => (
-                <div key={author.id} className={styles.leaderboardItem}>
-                  <div className={styles.rankContainer}>
-                    <div className={`${styles.rankBadge} ${getRankColor(index + 1)}`}>
-                      {index + 1}
-                    </div>
-                  </div>
-                  <div className={styles.userInfo}>
-                    <div className={styles.address}>
-                      {formatAddress(author.address)}
-                    </div>
-                    <div className={styles.stats}>
-                      <span>{author.submitted} submitted</span>
-                      <span>•</span>
-                      <span>{author.verified} verified</span>
-                    </div>
-                  </div>
-                  <div className={styles.earnings}>
-                    <div className={styles.solAmount}>{author.solEarned} SOL</div>
-                    <div className={styles.reputation}>{author.reputation} rep</div>
-                  </div>
-                </div>
-              ))}
+        {stats && (
+          <div className={styles.summaryStats}>
+            <div className={`${styles.statCard} ${styles.blueCard}`}>
+              <div className={styles.statNumber}>{stats.total_verifiers}</div>
+              <div className={styles.statLabel}>Total Verifiers</div>
+            </div>
+            <div className={`${styles.statCard} ${styles.greenCard}`}>
+              <div className={styles.statNumber}>{stats.avg_accuracy}%</div>
+              <div className={styles.statLabel}>Avg Accuracy</div>
+            </div>
+            <div className={`${styles.statCard} ${styles.purpleCard}`}>
+              <div className={styles.statNumber}>{stats.total_sol_bonds}</div>
+              <div className={styles.statLabel}>Total SOL Bonds</div>
+            </div>
+            <div className={`${styles.statCard} ${styles.orangeCard}`}>
+              <div className={styles.statNumber}>{stats.total_evt_profit}</div>
+              <div className={styles.statLabel}>Total EVT Profit</div>
             </div>
           </div>
-        </div>
-
-        <div className={styles.summaryStats}>
-          <div className={`${styles.statCard} ${styles.blueCard}`}>
-            <div className={styles.statNumber}>156</div>
-            <div className={styles.statLabel}>Total Verifiers</div>
-          </div>
-          <div className={`${styles.statCard} ${styles.greenCard}`}>
-            <div className={styles.statNumber}>89.2%</div>
-            <div className={styles.statLabel}>Avg Accuracy</div>
-          </div>
-          <div className={`${styles.statCard} ${styles.purpleCard}`}>
-            <div className={styles.statNumber}>2,847</div>
-            <div className={styles.statLabel}>Total Stakes</div>
-          </div>
-          <div className={`${styles.statCard} ${styles.orangeCard}`}>
-            <div className={styles.statNumber}>45</div>
-            <div className={styles.statLabel}>Active Authors</div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

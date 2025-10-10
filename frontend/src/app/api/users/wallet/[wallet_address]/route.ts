@@ -2,12 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
+const supabaseUrl = 'https://bfjuqmhzczpybbozrpgz.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmanVxbWh6Y3pweWJib3pycGd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk4OTA0ODgsImV4cCI6MjA3NTQ2NjQ4OH0.n8ljnuPDJTmX_KU64p9_QpKjzcDR6fCdPn-z228oqlo';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

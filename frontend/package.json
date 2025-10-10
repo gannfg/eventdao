@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "build:frontend": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p 3000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "@supabase/supabase-js": "^2.74.0",
     "@types/estree": "^1.0.8",
     "@types/json-schema": "^7.0.15",
+    "critters": "^0.0.23",
     "next": "15.5.4",
     "pino-pretty": "^10.3.1",
     "react": "^18.3.1",
