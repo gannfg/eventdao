@@ -666,9 +666,6 @@
 }
 
 .roadmapCardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   margin-bottom: 20px;
 }
 
@@ -678,13 +675,6 @@
   color: white;
   margin: 0;
   line-height: 1.2;
-}
-
-.roadmapArrow {
-  font-size: 32px;
-  color: var(--accent);
-  font-weight: 900;
-  line-height: 1;
 }
 
 .roadmapCard p {

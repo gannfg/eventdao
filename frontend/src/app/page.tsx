@@ -172,7 +172,6 @@ export default function Home() {
           <div className={styles.roadmapCard}>
             <div className={styles.roadmapCardHeader}>
               <h3>Phase 1 — Foundation</h3>
-              <div className={styles.roadmapArrow}>→</div>
             </div>
             <p>Core event verification system with staking mechanics, automatic resolution through APIs, and NFT proof-of-attendance minting. Building the essential infrastructure for trustless event verification.</p>
             <div className={styles.roadmapIllustration}>
@@ -183,7 +182,6 @@ export default function Home() {
           <div className={styles.roadmapCard}>
             <div className={styles.roadmapCardHeader}>
               <h3>Phase 2 — Ecosystem</h3>
-              <div className={styles.roadmapArrow}>→</div>
             </div>
             <p>Partner with event organizers, venues, and ticketing platforms. Launch community leaderboards, achievement systems, and sponsor partnerships. Expand beyond crypto-native events.</p>
             <div className={styles.roadmapIllustration}>
@@ -194,7 +192,6 @@ export default function Home() {
           <div className={styles.roadmapCard}>
             <div className={styles.roadmapCardHeader}>
               <h3>Phase 3 — Global Standard</h3>
-              <div className={styles.roadmapArrow}>→</div>
             </div>
             <p>Establish EventDAO as the universal standard for verifiable event attendance. Scale to millions of events worldwide, with seamless integration across all major platforms and industries.</p>
             <div className={styles.roadmapIllustration}>
