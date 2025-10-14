@@ -50,6 +50,7 @@ body {
   body {
     background-attachment: scroll;
     background-size: cover;
+    background-color: #000000 !important; /* Force black background on mobile */
   }
 }
 

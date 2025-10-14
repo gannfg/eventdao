@@ -26,12 +26,14 @@
 @media (max-width: 768px) {
   .page {
     padding-top: 100px;
+    background-color: #000000 !important; /* Force black background on mobile */
   }
 }
 
 @media (max-width: 480px) {
   .page {
     padding-top: 90px;
+    background-color: #000000 !important; /* Force black background on mobile */
   }
 }
 
