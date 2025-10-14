@@ -30,16 +30,6 @@ export default function Footer() {
 
           {/* Right side - Social Links */}
           <div className={styles.socialLinks}>
-            <Link href="/docs" className={styles.socialLink} aria-label="Documentation">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M16 13H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M16 17H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M10 9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Link>
-            
             <Link href="https://twitter.com/eventdao" className={styles.socialLink} aria-label="Follow us on X (Twitter)" target="_blank" rel="noopener noreferrer">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18.244 2.25H21.168L13.583 10.885L22.5 21.75H15.416L9.916 14.885L3.666 21.75H0.741L8.916 12.615L0.5 2.25H7.833L12.666 8.385L18.244 2.25ZM16.583 19.5H18.416L6.416 4.5H4.416L16.583 19.5Z" fill="currentColor"/>

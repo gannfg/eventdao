@@ -1,6 +1,9 @@
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
 import styles from "./page.module.css";
 import Footer from "../components/Footer";
 
@@ -11,6 +14,38 @@ const Header = dynamic(() => import("../components/Header"), {
 });
 
 export default function Home() {
+  // Fix FAQ scroll jumping issue
+  useEffect(() => {
+    const handleSummaryClick = (event: Event) => {
+      event.preventDefault();
+      const summary = event.target as HTMLElement;
+      const details = summary.parentElement as HTMLDetailsElement;
+      
+      if (details) {
+        // Close all other details
+        const allDetails = document.querySelectorAll('details');
+        allDetails.forEach(d => {
+          if (d !== details) {
+            d.open = false;
+          }
+        });
+        // Toggle the clicked one
+        details.open = !details.open;
+      }
+    };
+
+    const summaryElements = document.querySelectorAll('summary');
+    summaryElements.forEach(summary => {
+      summary.addEventListener('click', handleSummaryClick);
+    });
+
+    return () => {
+      summaryElements.forEach(summary => {
+        summary.removeEventListener('click', handleSummaryClick);
+      });
+    };
+  }, []);
+
   return (
     <div className={styles.page}>
       <Header currentPage="home" />
