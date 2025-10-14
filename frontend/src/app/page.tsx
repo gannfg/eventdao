@@ -2,46 +2,49 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import styles from "./page.module.css";
 import Footer from "../components/Footer";
-
-// Dynamic import for Header to reduce initial bundle size
-const Header = dynamic(() => import("../components/Header"), {
-  ssr: true,
-  loading: () => <div style={{ height: "120px" }} />
-});
+import Header from "../components/Header";
 
 export default function Home() {
   // Simple FAQ accordion behavior without interfering with scroll
   useEffect(() => {
     const handleDetailsToggle = (event: Event) => {
-      const details = event.target as HTMLDetailsElement;
-      
-      if (details && details.closest('.faq')) {
-        // Close all other FAQ details when one opens
-        if (details.open) {
-          const allDetails = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
-          allDetails.forEach(d => {
-            if (d !== details) {
-              d.open = false;
-            }
-          });
+      try {
+        const details = event.target as HTMLDetailsElement;
+        
+        if (details && details.closest('.faq')) {
+          // Close all other FAQ details when one opens
+          if (details.open) {
+            const allDetails = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
+            allDetails.forEach(d => {
+              if (d !== details) {
+                d.open = false;
+              }
+            });
+          }
         }
+      } catch (error) {
+        console.error('Error in FAQ toggle handler:', error);
       }
     };
 
-    const detailsElements = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
-    detailsElements.forEach(details => {
-      details.addEventListener('toggle', handleDetailsToggle);
-    });
-
-    return () => {
+    try {
+      const detailsElements = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
       detailsElements.forEach(details => {
-        details.removeEventListener('toggle', handleDetailsToggle);
+        details.addEventListener('toggle', handleDetailsToggle);
       });
-    };
+
+      return () => {
+        detailsElements.forEach(details => {
+          details.removeEventListener('toggle', handleDetailsToggle);
+        });
+      };
+    } catch (error) {
+      console.error('Error setting up FAQ event listeners:', error);
+      return () => {};
+    }
   }, []);
 
   return (
