@@ -68,7 +68,6 @@ export default function Home() {
 
 
       <section className={styles.section} id="about">
-        <h2>⚡ EventDAO — Truth Verification Through Collective Intelligence</h2>
         <h1 className={styles.headline}>Combat Misinformation with Blockchain Truth.</h1>
         <p className={styles.subheadline}>
           EventDAO is a decentralized platform that incentivizes users to find and verify the truth. Instead of relying on centralized fact-checkers, EventDAO allows the community to collectively validate real-world events, news, and rumors using blockchain transparency and AI-powered verification.
