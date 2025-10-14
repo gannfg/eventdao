@@ -277,7 +277,7 @@
 .features {
   display: none; /* old feature cards removed in new content */
 }
-.headline { font-size: clamp(28px, 6vw, 64px); font-weight: 900; letter-spacing: -1px; margin-top: 8px; }
+.headline { font-size: clamp(23px, 5vw, 59px); font-weight: 900; letter-spacing: -1px; margin-top: 8px; }
 .subheadline { margin-top: 6px; opacity: 0.95; }
 .lead { font-size: 18px; line-height: 1.7; opacity: 0.95; }
 
