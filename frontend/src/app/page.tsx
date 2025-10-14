@@ -14,34 +14,32 @@ const Header = dynamic(() => import("../components/Header"), {
 });
 
 export default function Home() {
-  // Fix FAQ scroll jumping issue
+  // Simple FAQ accordion behavior without interfering with scroll
   useEffect(() => {
-    const handleSummaryClick = (event: Event) => {
-      event.preventDefault();
-      const summary = event.target as HTMLElement;
-      const details = summary.parentElement as HTMLDetailsElement;
+    const handleDetailsToggle = (event: Event) => {
+      const details = event.target as HTMLDetailsElement;
       
-      if (details) {
-        // Close all other details
-        const allDetails = document.querySelectorAll('details');
-        allDetails.forEach(d => {
-          if (d !== details) {
-            d.open = false;
-          }
-        });
-        // Toggle the clicked one
-        details.open = !details.open;
+      if (details && details.closest('.faq')) {
+        // Close all other FAQ details when one opens
+        if (details.open) {
+          const allDetails = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
+          allDetails.forEach(d => {
+            if (d !== details) {
+              d.open = false;
+            }
+          });
+        }
       }
     };
 
-    const summaryElements = document.querySelectorAll('summary');
-    summaryElements.forEach(summary => {
-      summary.addEventListener('click', handleSummaryClick);
+    const detailsElements = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
+    detailsElements.forEach(details => {
+      details.addEventListener('toggle', handleDetailsToggle);
     });
 
     return () => {
-      summaryElements.forEach(summary => {
-        summary.removeEventListener('click', handleSummaryClick);
+      detailsElements.forEach(details => {
+        details.removeEventListener('toggle', handleDetailsToggle);
       });
     };
   }, []);
