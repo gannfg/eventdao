@@ -21,7 +21,7 @@ export class LeaderboardService {
       }
 
       // Try to select the leaderboard columns
-      let query = supabase
+      const query = supabase
         .from('users')
         .select(`
           id,
@@ -132,7 +132,7 @@ export class LeaderboardService {
         return this.getMockAuthors(limit);
       }
 
-      let query = supabase
+      const query = supabase
         .from('users')
         .select(`
           id,
@@ -236,7 +236,7 @@ export class LeaderboardService {
         return this.getMockProfitMakers(limit);
       }
 
-      let query = supabase
+      const query = supabase
         .from('users')
         .select(`
           id,

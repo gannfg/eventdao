@@ -12,6 +12,9 @@ import styles from './page.module.css';
 type AdminTab = 'configuration' | 'event-management' | 'user-management' | 'analytics';
 
 export default function AdminPage() {
+  const [activeTab, setActiveTab] = useState<AdminTab>('configuration');
+  const { user: walletUser } = useWalletIntegration();
+
   // Check if admin features are enabled (only in devnet)
   if (!isAdminEnabled()) {
     return (
@@ -28,9 +31,6 @@ export default function AdminPage() {
       </div>
     );
   }
-
-  const [activeTab, setActiveTab] = useState<AdminTab>('configuration');
-  const { user: walletUser } = useWalletIntegration();
   console.log('Admin user:', walletUser); // TODO: Use walletUser in admin functionality
 
   // Configuration state
