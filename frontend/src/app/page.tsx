@@ -191,40 +191,33 @@ export default function Home() {
       </section>
 
       <section className={styles.roadmapSection} id="roadmap">
-        <div className={styles.roadmapContainer}>
-          <Image
-            src="/roadmap_design.png"
-            alt="EventDAO Roadmap Journey"
-            width={1000}
-            height={1500}
-            className={styles.roadmapImageContent}
-          />
-          <div className={styles.roadmapTextOverlay} data-phase="1">
+        <div className={styles.roadmapHeader}>
+          <h3>Our Roadmap</h3>
+          <p>Here is our development phases that will guide EventDAO to become the global standard for truth verification.</p>
+        </div>
+        <div className={styles.roadmapCards}>
+          <div className={`${styles.roadmapCard} ${styles.foundationCard}`}>
+            <div className={styles.cardIcon}>🏗️</div>
             <h4>Phase 1 — Foundation</h4>
-            <p>Core event verification system with staking mechanics, automatic resolution through APIs, and NFT proof-of-attendance minting. Building the essential infrastructure for trustless event verification.</p>
+            <p>For those who want to build the core infrastructure for trustless event verification.</p>
+            <div className={styles.cardArrow}>→</div>
           </div>
-          <div className={styles.roadmapTextOverlay} data-phase="2">
+          <div className={`${styles.roadmapCard} ${styles.ecosystemCard}`}>
+            <div className={styles.cardIcon}>🌐</div>
             <h4>Phase 2 — Ecosystem</h4>
-            <p>Partner with event organizers, venues, and ticketing platforms. Launch community leaderboards, achievement systems, and sponsor partnerships. Expand beyond crypto-native events.</p>
+            <p>For those who want to expand partnerships and community features.</p>
+            <div className={styles.cardArrow}>→</div>
           </div>
-          <div className={styles.roadmapTextOverlay} data-phase="3">
+          <div className={`${styles.roadmapCard} ${styles.globalCard}`}>
+            <div className={styles.cardIcon}>🌍</div>
             <h4>Phase 3 — Global Standard</h4>
-            <p>Establish EventDAO as the universal standard for verifiable event attendance. Scale to millions of events worldwide, with seamless integration across all major platforms and industries.</p>
+            <p>For those who want to establish EventDAO as the universal truth verification platform.</p>
+            <div className={styles.cardArrow}>→</div>
           </div>
         </div>
-        <div className={styles.roadmapMobilePhases}>
-          <div className={styles.roadmapMobilePhase}>
-            <h4>Phase 1 — Foundation</h4>
-            <p>Core event verification system with staking mechanics, automatic resolution through APIs, and NFT proof-of-attendance minting. Building the essential infrastructure for trustless event verification.</p>
-          </div>
-          <div className={styles.roadmapMobilePhase}>
-            <h4>Phase 2 — Ecosystem</h4>
-            <p>Partner with event organizers, venues, and ticketing platforms. Launch community leaderboards, achievement systems, and sponsor partnerships. Expand beyond crypto-native events.</p>
-          </div>
-          <div className={styles.roadmapMobilePhase}>
-            <h4>Phase 3 — Global Standard</h4>
-            <p>Establish EventDAO as the universal standard for verifiable event attendance. Scale to millions of events worldwide, with seamless integration across all major platforms and industries.</p>
-          </div>
+        <div className={styles.roadmapCallToAction}>
+          <h2>KEEP BUILDING UNTIL YOU FIND YOUR TRUTH</h2>
+          <p>EventDAO Team</p>
         </div>
       </section>
 
