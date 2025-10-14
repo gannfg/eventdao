@@ -607,11 +607,11 @@
 .row { display: contents; }
 .cellHead { background: var(--surface-2); padding: 10px; border-radius: 8px; font-weight: 700; }
 .cell { background: var(--surface-1); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
-/* New Roadmap Section - Card Design */
+/* Modern Roadmap Section */
 .roadmapSection {
   background: transparent;
   border: none;
-  margin: 60px auto;
+  margin: 80px auto;
   padding: 0 32px;
   max-width: 1400px;
   position: relative;
@@ -621,11 +621,11 @@
 
 .roadmapHeader {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 60px;
 }
 
-.roadmapHeader h3 {
-  font-size: clamp(2rem, 4vw, 3rem);
+.roadmapHeader h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 900;
   color: white;
   margin-bottom: 16px;
@@ -642,9 +642,9 @@
 
 .roadmapCards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 32px;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 }
 
 .roadmapCard {
@@ -655,7 +655,7 @@
   padding: 32px;
   position: relative;
   transition: all 0.3s ease;
-  min-height: 280px;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
 }
@@ -666,86 +666,67 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.foundationCard {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.ecosystemCard {
-  background: linear-gradient(135deg, rgba(182, 254, 77, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
-  border-color: rgba(182, 254, 77, 0.3);
-}
-
-.globalCard {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.cardIcon {
-  font-size: 48px;
+.roadmapCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 20px;
-  display: block;
 }
 
-.roadmapCard h4 {
+.roadmapCardHeader h3 {
   font-size: 24px;
   font-weight: 800;
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.roadmapArrow {
+  font-size: 32px;
+  color: var(--accent);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.roadmapCard p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 24px 0;
+  flex-grow: 1;
+}
+
+.roadmapIllustration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+}
+
+.roadmapIcon {
+  font-size: 48px;
+  opacity: 0.8;
+}
+
+.roadmapCta {
+  text-align: center;
+  padding: 60px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.roadmapCta h2 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 900;
   color: white;
   margin-bottom: 16px;
   letter-spacing: -0.01em;
 }
 
-.ecosystemCard h4 {
+.roadmapCta h2 span {
   color: var(--accent);
 }
 
-.roadmapCard p {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
-  margin: 0;
-  flex-grow: 1;
-}
-
-.cardArrow {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--accent);
-  background: rgba(182, 254, 77, 0.2);
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.roadmapCard:hover .cardArrow {
-  background: rgba(182, 254, 77, 0.3);
-  transform: scale(1.1);
-  box-shadow: 0 8px 24px rgba(182, 254, 77, 0.4);
-}
-
-.roadmapCallToAction {
-  text-align: center;
-  margin-top: 60px;
-}
-
-.roadmapCallToAction h2 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 900;
-  color: white;
-  margin-bottom: 16px;
-  letter-spacing: -0.02em;
-}
-
-.roadmapCallToAction h2 span {
-  color: var(--accent);
-}
-
-.roadmapCallToAction p {
+.roadmapCta p {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
@@ -754,15 +735,15 @@
 /* Mobile roadmap adjustments */
 @media (max-width: 768px) {
   .roadmapSection {
-    margin: 40px 16px;
-    padding: 0 16px;
+    margin: 60px auto;
+    padding: 0 20px;
   }
   
   .roadmapHeader {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
   }
   
-  .roadmapHeader h3 {
+  .roadmapHeader h2 {
     font-size: 2rem;
   }
   
@@ -773,46 +754,47 @@
   .roadmapCards {
     grid-template-columns: 1fr;
     gap: 24px;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
   }
   
   .roadmapCard {
     padding: 24px;
-    min-height: 240px;
+    min-height: 280px;
   }
   
-  .cardIcon {
-    font-size: 40px;
-    margin-bottom: 16px;
-  }
-  
-  .roadmapCard h4 {
+  .roadmapCardHeader h3 {
     font-size: 20px;
+  }
+  
+  .roadmapArrow {
+    font-size: 28px;
   }
   
   .roadmapCard p {
     font-size: 15px;
   }
   
-  .cardArrow {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
+  .roadmapIcon {
+    font-size: 40px;
   }
   
-  .roadmapCallToAction {
-    margin-top: 40px;
+  .roadmapCta {
+    padding: 40px 0;
   }
   
-  .roadmapCallToAction h2 {
-    font-size: 2rem;
+  .roadmapCta h2 {
+    font-size: 1.5rem;
+  }
+  
+  .roadmapCta p {
+    font-size: 16px;
   }
 }
 
 @media (max-width: 480px) {
   .roadmapSection {
-    margin: 32px 12px;
-    padding: 0 12px;
+    margin: 40px auto;
+    padding: 0 16px;
   }
   
   .roadmapCards {
@@ -821,14 +803,10 @@
   
   .roadmapCard {
     padding: 20px;
-    min-height: 220px;
+    min-height: 260px;
   }
   
-  .cardIcon {
-    font-size: 36px;
-  }
-  
-  .roadmapCard h4 {
+  .roadmapCardHeader h3 {
     font-size: 18px;
   }
   

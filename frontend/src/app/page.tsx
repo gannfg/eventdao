@@ -2,49 +2,46 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import styles from "./page.module.css";
 import Footer from "../components/Footer";
-import Header from "../components/Header";
+
+// Dynamic import for Header to reduce initial bundle size
+const Header = dynamic(() => import("../components/Header"), {
+  ssr: true,
+  loading: () => <div style={{ height: "120px" }} />
+});
 
 export default function Home() {
   // Simple FAQ accordion behavior without interfering with scroll
   useEffect(() => {
     const handleDetailsToggle = (event: Event) => {
-      try {
-        const details = event.target as HTMLDetailsElement;
-        
-        if (details && details.closest('.faq')) {
-          // Close all other FAQ details when one opens
-          if (details.open) {
-            const allDetails = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
-            allDetails.forEach(d => {
-              if (d !== details) {
-                d.open = false;
-              }
-            });
-          }
+      const details = event.target as HTMLDetailsElement;
+      
+      if (details && details.closest('.faq')) {
+        // Close all other FAQ details when one opens
+        if (details.open) {
+          const allDetails = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
+          allDetails.forEach(d => {
+            if (d !== details) {
+              d.open = false;
+            }
+          });
         }
-      } catch (error) {
-        console.error('Error in FAQ toggle handler:', error);
       }
     };
 
-    try {
-      const detailsElements = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
-      detailsElements.forEach(details => {
-        details.addEventListener('toggle', handleDetailsToggle);
-      });
+    const detailsElements = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
+    detailsElements.forEach(details => {
+      details.addEventListener('toggle', handleDetailsToggle);
+    });
 
-      return () => {
-        detailsElements.forEach(details => {
-          details.removeEventListener('toggle', handleDetailsToggle);
-        });
-      };
-    } catch (error) {
-      console.error('Error setting up FAQ event listeners:', error);
-      return () => {};
-    }
+    return () => {
+      detailsElements.forEach(details => {
+        details.removeEventListener('toggle', handleDetailsToggle);
+      });
+    };
   }, []);
 
   return (
@@ -195,31 +192,47 @@ export default function Home() {
 
       <section className={styles.roadmapSection} id="roadmap">
         <div className={styles.roadmapHeader}>
-          <h3>Our Roadmap</h3>
+          <h2>Our Roadmap</h2>
           <p>Here is our development phases that will guide EventDAO to become the global standard for truth verification.</p>
         </div>
+        
         <div className={styles.roadmapCards}>
-          <div className={`${styles.roadmapCard} ${styles.foundationCard}`}>
-            <div className={styles.cardIcon}>🏗️</div>
-            <h4>Phase 1 — Foundation</h4>
-            <p>For those who want to build the core infrastructure for trustless event verification.</p>
-            <div className={styles.cardArrow}>→</div>
+          <div className={styles.roadmapCard}>
+            <div className={styles.roadmapCardHeader}>
+              <h3>Phase 1 — Foundation</h3>
+              <div className={styles.roadmapArrow}>→</div>
+            </div>
+            <p>Core event verification system with staking mechanics, automatic resolution through APIs, and NFT proof-of-attendance minting. Building the essential infrastructure for trustless event verification.</p>
+            <div className={styles.roadmapIllustration}>
+              <div className={styles.roadmapIcon}>🏗️</div>
+            </div>
           </div>
-          <div className={`${styles.roadmapCard} ${styles.ecosystemCard}`}>
-            <div className={styles.cardIcon}>🌐</div>
-            <h4>Phase 2 — Ecosystem</h4>
-            <p>For those who want to expand partnerships and community features.</p>
-            <div className={styles.cardArrow}>→</div>
+          
+          <div className={styles.roadmapCard}>
+            <div className={styles.roadmapCardHeader}>
+              <h3>Phase 2 — Ecosystem</h3>
+              <div className={styles.roadmapArrow}>→</div>
+            </div>
+            <p>Partner with event organizers, venues, and ticketing platforms. Launch community leaderboards, achievement systems, and sponsor partnerships. Expand beyond crypto-native events.</p>
+            <div className={styles.roadmapIllustration}>
+              <div className={styles.roadmapIcon}>🌐</div>
+            </div>
           </div>
-          <div className={`${styles.roadmapCard} ${styles.globalCard}`}>
-            <div className={styles.cardIcon}>🌍</div>
-            <h4>Phase 3 — Global Standard</h4>
-            <p>For those who want to establish EventDAO as the universal truth verification platform.</p>
-            <div className={styles.cardArrow}>→</div>
+          
+          <div className={styles.roadmapCard}>
+            <div className={styles.roadmapCardHeader}>
+              <h3>Phase 3 — Global Standard</h3>
+              <div className={styles.roadmapArrow}>→</div>
+            </div>
+            <p>Establish EventDAO as the universal standard for verifiable event attendance. Scale to millions of events worldwide, with seamless integration across all major platforms and industries.</p>
+            <div className={styles.roadmapIllustration}>
+              <div className={styles.roadmapIcon}>🌍</div>
+            </div>
           </div>
         </div>
-        <div className={styles.roadmapCallToAction}>
-          <h2>KEEP BUILDING UNTIL YOU FIND YOUR TRUTH</h2>
+        
+        <div className={styles.roadmapCta}>
+          <h2>BUILDING THE FUTURE OF TRUTH VERIFICATION</h2>
           <p>EventDAO Team</p>
         </div>
       </section>
