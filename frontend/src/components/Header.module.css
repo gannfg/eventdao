@@ -140,27 +140,22 @@
   }
 }
 
-.welcomeMessage {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 16px;
-  font-weight: 500;
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.welcomeMessage .username {
-  color: var(--accent, #b6fe4d);
-  font-weight: 600;
-}
-
-/* Mobile welcome message adjustments */
+/* Mobile user info adjustments */
 @media (max-width: 768px) {
-  .welcomeMessage {
-    font-size: 14px;
+  .userInfo {
+    gap: 6px;
   }
 }
 
 @media (max-width: 480px) {
-  .welcomeMessage {
-    font-size: 12px;
+  .userInfo {
+    gap: 4px;
   }
 }
 

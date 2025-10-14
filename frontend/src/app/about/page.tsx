@@ -14,7 +14,7 @@ export default function AboutPage() {
           <div className={styles.logoContainer}>
             <Image
               src="/eventdao.png"
-              alt="EventDAO - Proof of Event on Solana"
+              alt="EventDAO - Truth Verification Through Collective Intelligence"
               width={800}
               height={400}
               className={styles.heroLogo}
@@ -24,8 +24,8 @@ export default function AboutPage() {
           
           <div className={styles.quoteBox}>
             <p className={styles.quoteText}>
-              Imagine a world where every concert, seminar, or sports match you attend can be verified on-chain. 
-              No fake tickets. No unverifiable claims. Just transparent, collectible proof of attendance.
+              Imagine a world where truth is verified through collective intelligence, not centralized control. 
+              No fake news. No unverifiable claims. Just transparent, community-driven truth verification.
             </p>
           </div>
         </div>
@@ -35,9 +35,9 @@ export default function AboutPage() {
           <h2 className={styles.sectionTitle}>Current Problems</h2>
           <div className={styles.problemsBox}>
             <ul className={styles.problemsList}>
-              <li>Events today are hard to verify</li>
-              <li>Fake tickets, manual attendance, unverifiable claims.</li>
-              <li>People want digital proof they can trust and collect</li>
+              <li>Misinformation spreads faster than truth verification</li>
+              <li>Centralized fact-checkers are slow, biased, or untrusted</li>
+              <li>People need a decentralized way to verify news and events collectively</li>
             </ul>
           </div>
         </div>
@@ -47,14 +47,14 @@ export default function AboutPage() {
           <h2 className={styles.sectionTitle}>EventDAO Solution</h2>
           <div className={styles.solutionBox}>
             <p className={styles.solutionIntro}>
-              EventDAO - A Solana-based platform for event verification
+              EventDAO - A Solana-based platform for truth verification through collective intelligence
             </p>
             <ul className={styles.solutionList}>
-              <li>Users submit event claims (e.g. &apos;Coldplay Jakarta, Nov 15, 2025, happened&apos;)</li>
-              <li>Others stake small amounts (0.01-0.1 SOL) for or against</li>
-              <li>Resolution via APIs, news feeds, or oracles</li>
-              <li>Winners earn rewards</li>
-              <li>Attendees mint unique NFT Proof of Attendance</li>
+              <li>Users submit truth claims (e.g. &apos;Tesla announces Gigafactory in Vietnam&apos;)</li>
+              <li>Community stakes tokens to express judgment on Fact vs Hoax</li>
+              <li>AI monitors credible sources (BBC, CNN, Reuters) via NewsData.io</li>
+              <li>7-day resolution period with automatic verification</li>
+              <li>Correct stakers earn redistributed tokens and reputation points</li>
             </ul>
           </div>
         </div>
@@ -64,27 +64,27 @@ export default function AboutPage() {
           <h2 className={styles.sectionTitle}>Key Features</h2>
           <div className={styles.featuresGrid}>
             <div className={styles.featureCard}>
-              <h3 className={styles.featureTitle}>Event Verification Market</h3>
+              <h3 className={styles.featureTitle}>AI-Powered Verification</h3>
               <p className={styles.featureDescription}>
-                Transparent and decentralized event verification marketplace
+                Automatically analyze claims using NewsData.io to detect related coverage and credible sources
               </p>
             </div>
             <div className={styles.featureCard}>
-              <h3 className={styles.featureTitle}>NFT Attendance (POAPs)</h3>
+              <h3 className={styles.featureTitle}>Collective Intelligence</h3>
               <p className={styles.featureDescription}>
-                Mint NFTs as collectible proof of attendance
+                Community stakes tokens to express judgment on Fact vs Hoax, creating balanced truth-seeking ecosystem
               </p>
             </div>
             <div className={styles.featureCard}>
-              <h3 className={styles.featureTitle}>Gamification</h3>
+              <h3 className={styles.featureTitle}>Reputation System</h3>
               <p className={styles.featureDescription}>
-                Leaderboards, badges, and engaging reward systems
+                Earn reputation points for accuracy, with higher reputation increasing future rewards and credibility
               </p>
             </div>
             <div className={styles.featureCard}>
-              <h3 className={styles.featureTitle}>Community DAO</h3>
+              <h3 className={styles.featureTitle}>7-Day Resolution</h3>
               <p className={styles.featureDescription}>
-                Community DAO for event curation and moderation
+                Time-bound verification with automatic monitoring of credible sources like BBC, CNN, Reuters
               </p>
             </div>
           </div>
@@ -97,29 +97,29 @@ export default function AboutPage() {
             <div className={styles.benefitItem}>
               <div className={styles.checkmarkIcon}>✓</div>
               <div className={styles.benefitContent}>
-                <h3 className={styles.benefitTitle}>Easy Verification</h3>
-                <p className={styles.benefitDescription}>Via official APIs and trusted oracles</p>
+                <h3 className={styles.benefitTitle}>Decentralized Truth</h3>
+                <p className={styles.benefitDescription}>No single entity controls truth verification</p>
               </div>
             </div>
             <div className={styles.benefitItem}>
               <div className={styles.checkmarkIcon}>✓</div>
               <div className={styles.benefitContent}>
-                <h3 className={styles.benefitTitle}>Global Use Case</h3>
-                <p className={styles.benefitDescription}>Concerts, sports, conferences worldwide</p>
+                <h3 className={styles.benefitTitle}>Global Application</h3>
+                <p className={styles.benefitDescription}>Product launches, sports, news, events worldwide</p>
               </div>
             </div>
             <div className={styles.benefitItem}>
               <div className={styles.checkmarkIcon}>✓</div>
               <div className={styles.benefitContent}>
-                <h3 className={styles.benefitTitle}>Fun & Lightweight</h3>
-                <p className={styles.benefitDescription}>Not political or bias-sensitive</p>
+                <h3 className={styles.benefitTitle}>Incentivized Accuracy</h3>
+                <p className={styles.benefitDescription}>Reward truth-seekers, penalize misinformation</p>
               </div>
             </div>
             <div className={styles.benefitItem}>
               <div className={styles.checkmarkIcon}>✓</div>
               <div className={styles.benefitContent}>
-                <h3 className={styles.benefitTitle}>Consumer-Friendly</h3>
-                <p className={styles.benefitDescription}>NFTs as easy-to-use digital tickets</p>
+                <h3 className={styles.benefitTitle}>AI-Enhanced</h3>
+                <p className={styles.benefitDescription}>Automated monitoring of credible news sources</p>
               </div>
             </div>
           </div>
@@ -130,27 +130,27 @@ export default function AboutPage() {
           <h2 className={styles.sectionTitle}>Why Solana?</h2>
           <div className={styles.solanaGrid}>
             <div className={styles.solanaCard}>
-              <h3 className={styles.solanaTitle}>Metaplex for NFTs</h3>
+              <h3 className={styles.solanaTitle}>Fast Transactions</h3>
               <p className={styles.solanaDescription}>
-                Well-integrated NFT standards
-              </p>
-            </div>
-            <div className={styles.solanaCard}>
-              <h3 className={styles.solanaTitle}>Pyth Oracles</h3>
-              <p className={styles.solanaDescription}>
-                Accurate real-time data verification
-              </p>
-            </div>
-            <div className={styles.solanaCard}>
-              <h3 className={styles.solanaTitle}>Solana Pay</h3>
-              <p className={styles.solanaDescription}>
-                Efficient payment system
+                Real-time truth verification and token redistribution
               </p>
             </div>
             <div className={styles.solanaCard}>
               <h3 className={styles.solanaTitle}>Low Fees</h3>
               <p className={styles.solanaDescription}>
-                Perfect for mass adoption
+                Perfect for frequent staking and collective intelligence
+              </p>
+            </div>
+            <div className={styles.solanaCard}>
+              <h3 className={styles.solanaTitle}>Scalable Infrastructure</h3>
+              <p className={styles.solanaDescription}>
+                Handle mass participation in truth verification
+              </p>
+            </div>
+            <div className={styles.solanaCard}>
+              <h3 className={styles.solanaTitle}>Transparent Blockchain</h3>
+              <p className={styles.solanaDescription}>
+                Immutable record of all truth verification activities
               </p>
             </div>
           </div>

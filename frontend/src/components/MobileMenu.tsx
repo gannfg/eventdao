@@ -39,7 +39,7 @@ const MobileMenu: React.FC = () => {
     { href: '/submit', label: 'Submit' },
     { href: '/explore', label: 'Explore' },
     { href: '/leaderboard', label: 'Leaderboard' },
-    { href: '/wallet', label: 'Wallet' },
+    { href: '/account', label: 'Account' },
     ...(isAdminEnabled() ? [{ href: '/admin', label: 'Admin' }] : []),
     { href: '/about', label: 'About' }
   ];

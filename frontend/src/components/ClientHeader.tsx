@@ -54,7 +54,7 @@ export default function ClientHeader({ currentPage, className }: HeaderProps) {
         <a href="/submit" className={`${styles.navLink} ${getActiveClass('submit')}`}>Submit</a>
         <a href="/explore" className={`${styles.navLink} ${getActiveClass('explore')}`}>Explore</a>
         <a href="/leaderboard" className={`${styles.navLink} ${getActiveClass('leaderboard')}`}>Leaderboard</a>
-        <a href="/wallet" className={`${styles.navLink} ${getActiveClass('wallet')}`}>Wallet</a>
+        <a href="/account" className={`${styles.navLink} ${getActiveClass('account')}`}>Account</a>
         {isAdminEnabled() && (
           <a href="/admin" className={`${styles.navLink} ${getActiveClass('admin')}`}>Admin</a>
         )}

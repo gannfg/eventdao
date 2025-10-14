@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useWalletIntegration } from '../lib/wallet-integration';
+import styles from './WelcomeMessage.module.css';
 
 interface WelcomeMessageProps {
   className?: string;
@@ -21,10 +22,18 @@ const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ className }) => {
   }
 
   return (
-    <div className={className}>
-      <span className="welcome-text">
-        Welcome, <span className="username">{user.username}</span>
-      </span>
+    <div className={`${styles.userInfo} ${className || ''}`}>
+      <div className={styles.avatarContainer}>
+        <img 
+          src={user.avatar_url || '/default-avatar.svg'} 
+          alt="Profile Avatar" 
+          className={styles.avatar}
+          onError={(e) => {
+            e.currentTarget.src = '/default-avatar.svg';
+          }}
+        />
+      </div>
+      <span className={styles.username}>{user.username}</span>
     </div>
   );
 };

@@ -9,6 +9,7 @@ const convertToWalletUser = (user: User): WalletUser => ({
   id: user.id,
   wallet_address: user.wallet_address,
   username: user.username,
+  avatar_url: user.avatar_url,
   reputation: 0,
   total_staked: 0,
   total_verified: 0,

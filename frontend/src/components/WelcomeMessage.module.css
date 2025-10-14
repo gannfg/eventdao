@@ -1,0 +1,66 @@
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.avatarContainer {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.avatarContainer:hover .avatar {
+  border-color: var(--accent, #b6fe4d);
+  box-shadow: 0 0 10px rgba(182, 254, 77, 0.3);
+}
+
+.username {
+  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .userInfo {
+    font-size: 14px;
+    gap: 6px;
+  }
+  
+  .avatar {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .username {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .userInfo {
+    font-size: 12px;
+    gap: 4px;
+  }
+  
+  .avatar {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .username {
+    font-size: 12px;
+  }
+}
