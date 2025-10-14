@@ -19,7 +19,6 @@
   overflow-y: auto;
   position: relative;
   z-index: auto;
-  scroll-behavior: smooth;
 }
 
 /* Mobile page adjustments */

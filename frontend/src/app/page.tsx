@@ -14,35 +14,7 @@ const Header = dynamic(() => import("../components/Header"), {
 });
 
 export default function Home() {
-  // Simple FAQ accordion behavior without interfering with scroll
-  useEffect(() => {
-    const handleDetailsToggle = (event: Event) => {
-      const details = event.target as HTMLDetailsElement;
-      
-      if (details && details.closest('.faq')) {
-        // Close all other FAQ details when one opens
-        if (details.open) {
-          const allDetails = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
-          allDetails.forEach(d => {
-            if (d !== details) {
-              d.open = false;
-            }
-          });
-        }
-      }
-    };
-
-    const detailsElements = document.querySelectorAll('.faq details') as NodeListOf<HTMLDetailsElement>;
-    detailsElements.forEach(details => {
-      details.addEventListener('toggle', handleDetailsToggle);
-    });
-
-    return () => {
-      detailsElements.forEach(details => {
-        details.removeEventListener('toggle', handleDetailsToggle);
-      });
-    };
-  }, []);
+  // Remove FAQ scroll handling to prevent scroll interference
 
   return (
     <div className={styles.page}>
