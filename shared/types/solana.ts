@@ -35,6 +35,7 @@ export interface WalletUser {
   id: string;
   wallet_address: string;
   username?: string;
+  avatar_url?: string;
   reputation: number;
   total_staked: number;
   total_verified: number;
