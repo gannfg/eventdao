@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import Footer from "../components/Footer";
 
@@ -14,7 +14,7 @@ const Header = dynamic(() => import("../components/Header"), {
 });
 
 export default function Home() {
-  // Remove FAQ scroll handling to prevent scroll interference
+  // Removed scroll animations to prevent scroll conflicts
 
   return (
     <div className={styles.page}>
@@ -202,7 +202,6 @@ export default function Home() {
         
         <div className={styles.roadmapCta}>
           <h2>BUILDING THE FUTURE OF TRUTH VERIFICATION</h2>
-          <p>EventDAO Team</p>
         </div>
       </section>
 

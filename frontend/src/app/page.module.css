@@ -12,13 +12,12 @@
   --surface-2: rgba(255,255,255,0.1);
   --border: rgba(255,255,255,0.16);
 
-  min-height: 100vh;
   color: var(--foreground);
   padding-top: 120px; /* Account for fixed header */
   overflow-x: hidden;
-  overflow-y: auto;
   position: relative;
   z-index: auto;
+  scroll-behavior: smooth;
 }
 
 /* Mobile page adjustments */
@@ -606,6 +605,21 @@
 .row { display: contents; }
 .cellHead { background: var(--surface-2); padding: 10px; border-radius: 8px; font-weight: 700; }
 .cell { background: var(--surface-1); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+/* Scroll Animation Classes */
+.sectionHidden {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none; /* Prevent interaction with hidden sections */
+}
+
+.sectionVisible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: auto; /* Allow interaction with visible sections */
+}
+
 /* Modern Roadmap Section */
 .roadmapSection {
   background: transparent;
