@@ -329,7 +329,7 @@
 
 .quickActionsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 
@@ -533,7 +533,340 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Transaction History */
+/* Daily Missions */
+.missionsCard {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-top: 24px;
+}
+
+.missionsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 24px;
+}
+
+.evtStats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.missionsTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.missionsSubtitle {
+  font-size: 14px;
+  opacity: 0.8;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.totalEarned {
+  background: rgba(182, 254, 77, 0.1);
+  border: 1px solid rgba(182, 254, 77, 0.3);
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-align: right;
+  min-width: 180px;
+}
+
+.totalEarnedLabel {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.totalEarnedValue {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.missionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.missionCard {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 160px;
+}
+
+.missionCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.missionHeader {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.missionIconLarge {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.missionInfo {
+  flex: 1;
+}
+
+.missionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.missionDescription {
+  font-size: 13px;
+  opacity: 0.7;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.missionFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.missionReward {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.rewardIcon {
+  font-size: 16px;
+}
+
+.rewardAmount {
+  font-size: 16px;
+}
+
+.missionBtn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.missionBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.availableBadge {
+  background: rgba(182, 254, 77, 0.2);
+  color: var(--accent);
+  border-color: rgba(182, 254, 77, 0.3);
+}
+
+.availableBadge:hover:not(:disabled) {
+  background: rgba(182, 254, 77, 0.3);
+  transform: translateY(-1px);
+}
+
+.inProgressBadge {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+  border-color: rgba(255, 152, 0, 0.3);
+}
+
+.completedBadge {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
+.completedBadge:hover:not(:disabled) {
+  background: rgba(33, 150, 243, 0.3);
+  transform: translateY(-1px);
+}
+
+.claimedBadge {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+.rewardMechanism {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.mechanismTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+
+.mechanismList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mechanismList li {
+  font-size: 14px;
+  opacity: 0.8;
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.mechanismList li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Loading, Error, and Empty States */
+.loadingState,
+.errorState,
+.notConnectedState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 300px;
+}
+
+.loadingSpinner {
+  font-size: 48px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingState p {
+  margin-top: 16px;
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+.errorState {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 12px;
+}
+
+.errorIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.errorState p {
+  font-size: 16px;
+  color: #f44336;
+  margin-bottom: 20px;
+  max-width: 400px;
+}
+
+.retryBtn {
+  padding: 12px 24px;
+  background: rgba(182, 254, 77, 0.2);
+  color: var(--accent);
+  border: 1px solid rgba(182, 254, 77, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retryBtn:hover {
+  background: rgba(182, 254, 77, 0.3);
+  transform: translateY(-1px);
+}
+
+.notConnectedState {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.notConnectedIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.notConnectedState h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--foreground);
+}
+
+.notConnectedState p {
+  font-size: 14px;
+  opacity: 0.7;
+  max-width: 300px;
+}
+
+/* Old Transaction History styles - kept for backwards compatibility */
 .historyCard {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
@@ -775,6 +1108,20 @@
     grid-template-columns: 1fr;
     gap: 12px;
   }
+
+  .missionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .missionsHeader {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .totalEarned {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 @media (max-width: 768px) {
@@ -816,6 +1163,53 @@
   
   .actionSubtitle {
     font-size: 9px;
+  }
+  
+  .missionsCard {
+    padding: 20px;
+  }
+
+  .missionsTitle {
+    font-size: 20px;
+  }
+
+  .missionsSubtitle {
+    font-size: 13px;
+  }
+
+  .missionsGrid {
+    gap: 16px;
+  }
+
+  .missionCard {
+    padding: 16px;
+    min-height: 140px;
+  }
+
+  .missionIconLarge {
+    font-size: 28px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .missionTitle {
+    font-size: 15px;
+  }
+
+  .missionDescription {
+    font-size: 12px;
+  }
+
+  .rewardMechanism {
+    padding: 20px;
+  }
+
+  .mechanismTitle {
+    font-size: 16px;
+  }
+
+  .mechanismList li {
+    font-size: 13px;
   }
   
   .transactionTable {
@@ -867,6 +1261,78 @@
   
   .actionSubtitle {
     font-size: 8px;
+  }
+
+  .missionsCard {
+    padding: 16px;
+  }
+
+  .missionsTitle {
+    font-size: 18px;
+  }
+
+  .missionsSubtitle {
+    font-size: 12px;
+  }
+
+  .totalEarnedLabel {
+    font-size: 11px;
+  }
+
+  .totalEarnedValue {
+    font-size: 20px;
+  }
+
+  .missionsGrid {
+    gap: 12px;
+  }
+
+  .missionCard {
+    padding: 14px;
+    min-height: 130px;
+  }
+
+  .missionHeader {
+    gap: 12px;
+  }
+
+  .missionIconLarge {
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .missionTitle {
+    font-size: 14px;
+  }
+
+  .missionDescription {
+    font-size: 11px;
+  }
+
+  .missionBtn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .rewardAmount {
+    font-size: 14px;
+  }
+
+  .rewardMechanism {
+    padding: 16px;
+  }
+
+  .mechanismTitle {
+    font-size: 15px;
+  }
+
+  .mechanismList {
+    gap: 10px;
+  }
+
+  .mechanismList li {
+    font-size: 12px;
   }
   
   .transactionTable {
