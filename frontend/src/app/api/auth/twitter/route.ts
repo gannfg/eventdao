@@ -6,8 +6,11 @@ export async function GET(request: NextRequest) {
     const redirectUri = process.env.TWITTER_CALLBACK_URL;
     
     if (!clientId || !redirectUri) {
+      const missing: string[] = [];
+      if (!clientId) missing.push('NEXT_PUBLIC_TWITTER_CLIENT_ID');
+      if (!redirectUri) missing.push('TWITTER_CALLBACK_URL');
       return NextResponse.json(
-        { error: 'Twitter API credentials not configured' },
+        { error: 'Twitter API credentials not configured', missing },
         { status: 500 }
       );
     }
