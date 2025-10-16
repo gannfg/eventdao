@@ -40,11 +40,25 @@ export async function GET(request: NextRequest) {
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('client_id', clientId);
     authUrl.searchParams.set('redirect_uri', redirectUri);
-    authUrl.searchParams.set('scope', 'tweet.read users.read follows.read offline.access');
+    // Start with minimal scopes to avoid authorization failures
+    // Add 'follows.read' later if Basic plan supports it for your app
+    authUrl.searchParams.set('scope', 'tweet.read users.read offline.access');
     authUrl.searchParams.set('state', state);
     authUrl.searchParams.set('code_challenge', codeChallenge);
     authUrl.searchParams.set('code_challenge_method', 'S256');
     
+    // Optional debug: /api/auth/twitter?debug=1 returns params instead of redirect
+    const debug = request.nextUrl.searchParams.get('debug');
+    if (debug) {
+      return NextResponse.json({
+        clientIdPresent: !!clientId,
+        redirectUri,
+        scope: authUrl.searchParams.get('scope'),
+        codeChallengeMethod: 'S256',
+        urlPreview: authUrl.toString().slice(0, 256) + '...'
+      });
+    }
+
     // Store state and code_verifier in cookies for verification
     const response = NextResponse.redirect(authUrl.toString());
     
