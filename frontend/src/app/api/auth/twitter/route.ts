@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const clientId = process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID;
-    const redirectUri = process.env.TWITTER_CALLBACK_URL;
+    // Support both NEXT_PUBLIC_TWITTER_CLIENT_ID and TWITTER_CLIENT_ID
+    // Support TWITTER_CALLBACK_URL and NEXT_PUBLIC_TWITTER_CALLBACK_URL
+    const clientId = process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID || process.env.TWITTER_CLIENT_ID;
+    const redirectUri = process.env.TWITTER_CALLBACK_URL || process.env.NEXT_PUBLIC_TWITTER_CALLBACK_URL;
     
     if (!clientId || !redirectUri) {
       const missing: string[] = [];
-      if (!clientId) missing.push('NEXT_PUBLIC_TWITTER_CLIENT_ID');
-      if (!redirectUri) missing.push('TWITTER_CALLBACK_URL');
+      if (!clientId) missing.push('NEXT_PUBLIC_TWITTER_CLIENT_ID|TWITTER_CLIENT_ID');
+      if (!redirectUri) missing.push('TWITTER_CALLBACK_URL|NEXT_PUBLIC_TWITTER_CALLBACK_URL');
       return NextResponse.json(
         { error: 'Twitter API credentials not configured', missing },
         { status: 500 }
