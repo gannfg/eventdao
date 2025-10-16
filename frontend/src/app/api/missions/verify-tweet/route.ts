@@ -24,12 +24,24 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Get user's Twitter account info
-    const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('x_account_id, x_username')
-      .eq('id', userId)
-      .single();
+    // Get user's Twitter account info (service-side if available)
+    const { createClient } = await import('@supabase/supabase-js');
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const serverClient = serviceKey
+      ? createClient(supabaseUrl!, serviceKey)
+      : null;
+
+    const { data: user, error: userError } = serverClient
+      ? await serverClient
+          .from('users')
+          .select('x_account_id, x_username')
+          .eq('id', userId)
+          .single()
+      : await supabase
+          .from('users')
+          .select('x_account_id, x_username')
+          .eq('id', userId)
+          .single();
     
     if (userError || !user?.x_account_id) {
       return NextResponse.json(

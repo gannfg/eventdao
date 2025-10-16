@@ -102,21 +102,16 @@ class MissionService {
    */
   async initializeUserMissions(userId: string): Promise<boolean> {
     try {
-      // Get all missions
-      const missions = await this.getAllMissions();
-
-      // Create user_mission records for each mission
-      const userMissions = missions.map(mission => ({
-        user_id: userId,
-        mission_id: mission.id,
-        status: 'available'
-      }));
-
-      const { error } = await supabase
-        .from('user_missions')
-        .insert(userMissions);
-
-      if (error) throw error;
+      // Call server route (uses service role) to bypass RLS if needed
+      const res = await fetch('/api/missions/init', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
       return true;
     } catch (error) {
       console.error('Error initializing user missions:', error);
