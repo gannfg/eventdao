@@ -52,20 +52,20 @@ export async function GET(request: NextRequest) {
     }
     
     // Exchange authorization code for access token
+    const tokenBody = new URLSearchParams({
+      code,
+      grant_type: 'authorization_code',
+      redirect_uri: process.env.TWITTER_CALLBACK_URL || process.env.NEXT_PUBLIC_TWITTER_CALLBACK_URL || '',
+      client_id: process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID || process.env.TWITTER_CLIENT_ID || '',
+      code_verifier: codeVerifier,
+    }).toString();
+
     const tokenResponse = await fetch('https://api.twitter.com/2/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${Buffer.from(
-          `${process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID}:${process.env.TWITTER_CLIENT_SECRET}`
-        ).toString('base64')}`,
       },
-      body: new URLSearchParams({
-        code,
-        grant_type: 'authorization_code',
-        redirect_uri: process.env.TWITTER_CALLBACK_URL!,
-        code_verifier: codeVerifier,
-      }).toString(),
+      body: tokenBody,
     });
     
     if (!tokenResponse.ok) {
