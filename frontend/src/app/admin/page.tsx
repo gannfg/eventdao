@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from "next/image";
-import Link from "next/link";
+// Removed unused imports flagged by linter
 import Header from "../../components/Header";
 import { useWalletIntegration } from "../../lib/wallet-integration";
 import { isAdminEnabled } from "../../utils/environment";
@@ -14,26 +13,7 @@ type AdminTab = 'configuration' | 'event-management' | 'user-management' | 'anal
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>('configuration');
   const { user: walletUser } = useWalletIntegration();
-
-  // Check if admin features are enabled (only in devnet)
-  if (!isAdminEnabled()) {
-    return (
-      <div className={styles.page}>
-        <Header currentPage="admin" />
-        <div className={styles.container}>
-          <div className={styles.pageHeader}>
-            <h1 className={styles.title}>Access Denied</h1>
-            <p className={styles.subtitle}>
-              Admin panel is only available in devnet/development environment
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  console.log('Admin user:', walletUser); // TODO: Use walletUser in admin functionality
-
-  // Configuration state
+  // Configuration state (must be declared before any conditional return)
   const [config, setConfig] = useState({
     resolutionWindow: 48,
     protocolFee: 2,
@@ -42,6 +22,9 @@ export default function AdminPage() {
     rpcEndpoint: 'https://api.devnet.solana.com',
     programId: '8fESbva8KnNirFj6EoyS5ep6Y6XMPMTJgyPufvphV1HK'
   });
+
+  const adminEnabled = isAdminEnabled();
+  console.log('Admin user:', walletUser); // TODO: Use walletUser in admin functionality
 
   const tabs = [
     { id: 'configuration' as AdminTab, label: 'Configuration', icon: '⚙️' },
@@ -227,6 +210,22 @@ export default function AdminPage() {
         );
     }
   };
+
+  if (!adminEnabled) {
+    return (
+      <div className={styles.page}>
+        <Header currentPage="admin" />
+        <div className={styles.container}>
+          <div className={styles.pageHeader}>
+            <h1 className={styles.title}>Access Denied</h1>
+            <p className={styles.subtitle}>
+              Admin panel is only available in devnet/development environment
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>

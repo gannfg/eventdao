@@ -82,7 +82,7 @@ export default function SetupStoragePage() {
         <div className={styles.info}>
           <h3>What this does:</h3>
           <ul>
-            <li>Creates a public storage bucket named "avatars"</li>
+            <li>Creates a public storage bucket named <code>avatars</code></li>
             <li>Sets up file type restrictions (JPEG, PNG, GIF, WebP)</li>
             <li>Sets maximum file size to 5MB</li>
             <li>Enables public access for avatar images</li>
