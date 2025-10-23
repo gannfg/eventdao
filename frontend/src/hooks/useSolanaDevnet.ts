@@ -9,6 +9,7 @@ import {
   formatSolAmount,
   isValidSolanaAddress,
   SOLANA_CONFIG,
+  sendToken2022,
 } from '../lib/solana-utils';
 import { useWalletIntegration } from '../lib/wallet-integration';
 import { SolanaAccountInfo, TransactionInfo } from '@eventdao/shared';
@@ -111,6 +112,35 @@ export const useSolanaDevnet = () => {
     }
   }, [wallet, refreshBalance]);
 
+  // Send EVT (Token-2022)
+  const sendEvtTransaction = useCallback(async (mintAddress: string, recipient: string, amount: number, decimals: number) => {
+    if (!isValidSolanaAddress(recipient)) {
+      throw new Error('Invalid recipient address');
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const signature = await sendToken2022(wallet, {
+        mintAddress,
+        recipientAddress: recipient,
+        amount,
+        decimals,
+      });
+
+      // No SOL balance change necessarily; consider refreshing relevant token balances elsewhere
+      return signature;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send EVT';
+      setError(errorMessage);
+      console.error('Error sending EVT:', err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [wallet]);
+
   // Fetch transaction history
   const fetchTransactions = useCallback(async (limit: number = 10) => {
     if (!wallet.publicKey) {
@@ -212,5 +242,8 @@ export const useSolanaDevnet = () => {
     // Utilities
     isValidSolanaAddress,
     formatSolAmount,
+
+    // Token-2022
+    sendEvtTransaction,
   };
 };

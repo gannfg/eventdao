@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // Removed unused imports flagged by linter
 import Header from "../../components/Header";
 import { useWalletIntegration } from "../../lib/wallet-integration";
 import { isAdminEnabled } from "../../utils/environment";
+import { Event } from '@eventdao/shared';
+import { EventService } from '../../lib/event-service';
 // import SolanaDashboard from "../../components/SolanaDashboard";
 import styles from './page.module.css';
 
@@ -25,6 +27,45 @@ export default function AdminPage() {
 
   const adminEnabled = isAdminEnabled();
   console.log('Admin user:', walletUser); // TODO: Use walletUser in admin functionality
+  // Event management state
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const loadEvents = async () => {
+    try {
+      setLoadingEvents(true);
+      const data = await EventService.getEvents();
+      setEvents(data);
+    } catch (err) {
+      console.error('Failed to load events', err);
+      alert('Failed to load events');
+    } finally {
+      setLoadingEvents(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'event-management') {
+      loadEvents();
+    }
+  }, [activeTab]);
+
+  const handleRemoveEvent = async (eventId: string, title: string) => {
+    const confirmed = confirm(`Remove event "${title}"? This cannot be undone.`);
+    if (!confirmed) return;
+    try {
+      setDeletingId(eventId);
+      await EventService.deleteEvent(eventId);
+      setEvents(prev => prev.filter(e => e.id !== eventId));
+      alert('Event removed');
+    } catch (err) {
+      console.error('Failed to delete event', err);
+      alert('Failed to delete event');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const tabs = [
     { id: 'configuration' as AdminTab, label: 'Configuration', icon: '⚙️' },
@@ -137,18 +178,73 @@ export default function AdminPage() {
             <div className={styles.managementGrid}>
               <div className={styles.managementCard}>
                 <h4 className={styles.managementCardTitle}>Active Events</h4>
-                <div className={styles.managementStat}>12</div>
+                <div className={styles.managementStat}>{events.filter(e => e.status === 'active').length}</div>
                 <p className={styles.managementDescription}>Events currently being verified</p>
               </div>
               <div className={styles.managementCard}>
                 <h4 className={styles.managementCardTitle}>Pending Events</h4>
-                <div className={styles.managementStat}>5</div>
+                <div className={styles.managementStat}>{events.filter(e => e.status === 'disputed').length}</div>
                 <p className={styles.managementDescription}>Events awaiting review</p>
               </div>
               <div className={styles.managementCard}>
                 <h4 className={styles.managementCardTitle}>Resolved Events</h4>
-                <div className={styles.managementStat}>47</div>
+                <div className={styles.managementStat}>{events.filter(e => e.status === 'completed').length}</div>
                 <p className={styles.managementDescription}>Events with final resolution</p>
+              </div>
+            </div>
+
+            <div className={styles.configPanel}>
+              <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12}}>
+                <h4 className={styles.managementCardTitle}>All Events</h4>
+                <button className={styles.updateButton} onClick={loadEvents} disabled={loadingEvents}>
+                  {loadingEvents ? 'Refreshing...' : 'Refresh'}
+                </button>
+              </div>
+              <div style={{overflowX:'auto'}}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Status</th>
+                      <th>Category</th>
+                      <th>Date</th>
+                      <th>EVT Authentic</th>
+                      <th>EVT Hoax</th>
+                      <th>Bond (SOL)</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {events.map(ev => (
+                      <tr key={ev.id}>
+                        <td>{ev.title}</td>
+                        <td>{ev.status}</td>
+                        <td>{ev.category}</td>
+                        <td>{new Date(ev.date).toLocaleDateString()}</td>
+                        <td>{ev.authentic_stake}</td>
+                        <td>{ev.hoax_stake}</td>
+                        <td>{ev.bond}</td>
+                        <td style={{textAlign:'right'}}>
+                          <button
+                            className={styles.dangerButton}
+                            onClick={() => handleRemoveEvent(ev.id, ev.title)}
+                            disabled={deletingId === ev.id}
+                            title="Remove event"
+                          >
+                            {deletingId === ev.id ? 'Removing...' : 'Remove'}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {events.length === 0 && !loadingEvents && (
+                      <tr>
+                        <td colSpan={8} style={{textAlign:'center', opacity:0.8, padding:'12px 0'}}>
+                          No events found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

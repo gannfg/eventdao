@@ -212,11 +212,11 @@ export default function ExplorePage() {
 
                 <div className={styles.stakingInfo}>
                   <div className={styles.stakeItem}>
-                    <div className={styles.stakeAmount}>{event.authentic_stake} SOL</div>
+                    <div className={styles.stakeAmount}>{event.authentic_stake} EVT</div>
                     <div className={styles.stakeLabel}>Authentic</div>
                   </div>
                   <div className={styles.stakeItem}>
-                    <div className={styles.stakeAmount}>{event.hoax_stake} SOL</div>
+                    <div className={styles.stakeAmount}>{event.hoax_stake} EVT</div>
                     <div className={styles.stakeLabel}>Hoax</div>
                   </div>
                 </div>
@@ -324,11 +324,11 @@ export default function ExplorePage() {
 
               <div className={styles.modalStakingInfo}>
                 <div className={styles.modalStakeItem}>
-                  <div className={styles.modalStakeAmount}>{selectedEvent.authentic_stake} SOL</div>
+                  <div className={styles.modalStakeAmount}>{selectedEvent.authentic_stake} EVT</div>
                   <div className={styles.modalStakeLabel}>Authentic</div>
                 </div>
                 <div className={styles.modalStakeItem}>
-                  <div className={styles.modalStakeAmount}>{selectedEvent.hoax_stake} SOL</div>
+                  <div className={styles.modalStakeAmount}>{selectedEvent.hoax_stake} EVT</div>
                   <div className={styles.modalStakeLabel}>Hoax</div>
                 </div>
               </div>

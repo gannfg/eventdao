@@ -6,6 +6,7 @@ import {
   LAMPORTS_PER_SOL,
   TransactionInstruction
 } from '@solana/web3.js';
+import { buildToken2022TransferTx } from './token-2022';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { SolanaConfig } from '@eventdao/shared';
 
@@ -105,6 +106,40 @@ export const sendSol = async (
     console.error('Error sending SOL:', error);
     throw error;
   }
+};
+
+// Send Token-2022 tokens (e.g., EVT) using checked transfer
+export const sendToken2022 = async (
+  wallet: WalletContextState,
+  params: {
+    mintAddress: string;
+    recipientAddress: string;
+    amount: number; // human units
+    decimals: number;
+  }
+): Promise<string> => {
+  if (!wallet.publicKey || !wallet.sendTransaction) {
+    throw new Error('Wallet not connected or sendTransaction not available');
+  }
+
+  const connection = getSolanaConnection();
+  const mint = new PublicKey(params.mintAddress);
+  const destinationOwner = new PublicKey(params.recipientAddress);
+  const amountInBaseUnits = BigInt(Math.round(params.amount * Math.pow(10, params.decimals)));
+
+  const tx: Transaction = await buildToken2022TransferTx({
+    connection,
+    payer: wallet.publicKey,
+    owner: wallet.publicKey,
+    destinationOwner,
+    mint,
+    amount: amountInBaseUnits,
+    decimals: params.decimals,
+  });
+
+  const signature = await wallet.sendTransaction(tx, connection);
+  await connection.confirmTransaction(signature);
+  return signature;
 };
 
 // Create a simple program instruction (placeholder for future program interactions)

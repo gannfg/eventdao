@@ -319,6 +319,89 @@
   flex-direction: column;
 }
 
+/* Quests Section */
+.questsSection {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.questsTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--accent);
+}
+
+.questsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.questCard {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 12px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.questIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.questContent { display: flex; flex-direction: column; gap: 8px; }
+.questHeaderRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.questTitle { font-size: 14px; font-weight: 700; }
+.questReward { font-size: 12px; font-weight: 700; color: #b6fe4d; }
+.questDesc { font-size: 12px; opacity: 0.8; }
+
+.questActionBtn {
+  align-self: flex-start;
+  background: rgba(182, 254, 77, 0.15);
+  color: #b6fe4d;
+  border: 1px solid rgba(182, 254, 77, 0.35);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.questActionBtn:hover {
+  background: rgba(182, 254, 77, 0.25);
+  border-color: rgba(182, 254, 77, 0.55);
+  transform: translateY(-1px);
+}
+
+.disabledBtn {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: none;
+}
+
 .quickActionsTitle {
   font-size: 16px;
   font-weight: 700;
@@ -772,6 +855,10 @@
 /* Responsive design */
 @media (max-width: 1024px) {
   .quickActionsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .questsGrid {
     grid-template-columns: 1fr;
     gap: 12px;
   }

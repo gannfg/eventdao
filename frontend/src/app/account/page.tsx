@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
@@ -27,6 +27,15 @@ interface Analytics {
   uniqueSessions: number;
   connectionFrequency: { daily: number; weekly: number; monthly: number };
   lastConnection: LastConnection | null;
+}
+
+interface QuestTask {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  rewardEvt: number;
+  action: 'stake' | 'submit' | 'checkin' | 'leaderboard';
 }
 
 const mockTransactions: Transaction[] = [
@@ -76,6 +85,57 @@ export default function WalletPage() {
   const [connectionsLoading] = useState(false);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
+  // Daily check-in state
+  const [checkedInToday, setCheckedInToday] = useState(false);
+
+  useEffect(() => {
+    try {
+      const key = 'evt_daily_checkin';
+      const stored = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
+      const today = new Date().toISOString().slice(0, 10);
+      if (stored === today) {
+        setCheckedInToday(true);
+      }
+    } catch (e) {
+      // ignore storage errors
+    }
+  }, []);
+
+  const quests: QuestTask[] = [
+    {
+      id: 'q1',
+      title: 'Daily Check-in',
+      description: 'Come back each day to claim a small reward.',
+      icon: '📅',
+      rewardEvt: 20,
+      action: 'checkin'
+    },
+    {
+      id: 'q2',
+      title: 'Stake on an Event',
+      description: 'Place a stake on any active prediction market.',
+      icon: '🎯',
+      rewardEvt: 50,
+      action: 'stake'
+    },
+    {
+      id: 'q3',
+      title: 'Submit an Event',
+      description: 'Propose a new event to the community.',
+      icon: '📝',
+      rewardEvt: 75,
+      action: 'submit'
+    },
+    {
+      id: 'q4',
+      title: 'Join the Leaderboard',
+      description: 'Compete by earning reputation and EVT.',
+      icon: '🏆',
+      rewardEvt: 30,
+      action: 'leaderboard'
+    }
+  ];
+
   const handleQuickAction = (action: string) => {
     switch (action) {
       case 'stake':
@@ -89,6 +149,38 @@ export default function WalletPage() {
         break;
       default:
         console.log(`Quick action: ${action}`);
+    }
+  };
+
+  const handleQuestAction = (action: QuestTask['action']) => {
+    switch (action) {
+      case 'stake':
+        router.push('/explore');
+        return;
+      case 'submit':
+        router.push('/submit');
+        return;
+      case 'checkin': {
+        if (checkedInToday) {
+          alert('You have already checked in today. Come back tomorrow!');
+          return;
+        }
+        const today = new Date().toISOString().slice(0, 10);
+        try {
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem('evt_daily_checkin', today);
+          }
+          setCheckedInToday(true);
+          alert('Daily check-in recorded! +20 EVT');
+        } catch (e) {
+          console.error('Failed to store check-in:', e);
+          setCheckedInToday(true);
+        }
+        return;
+      }
+      case 'leaderboard':
+        router.push('/leaderboard');
+        return;
     }
   };
 
@@ -170,6 +262,33 @@ export default function WalletPage() {
                 <div className={styles.actionSubtitle}>Transaction records</div>
               </div>
             </button>
+          </div>
+        </div>
+
+        {/* Quests Section - EVT Earnings */}
+        <div className={styles.questsSection}>
+          <h3 className={styles.questsTitle}>Quests to Earn EVT</h3>
+          <div className={styles.questsGrid}>
+            {quests.map((quest) => (
+              <div key={quest.id} className={styles.questCard}>
+                <div className={styles.questIcon}>{quest.icon}</div>
+                <div className={styles.questContent}>
+                  <div className={styles.questHeaderRow}>
+                    <div className={styles.questTitle}>{quest.title}</div>
+                    <div className={styles.questReward}>+{quest.rewardEvt} EVT</div>
+                  </div>
+                  <div className={styles.questDesc}>{quest.description}</div>
+                  <button
+                    className={`${styles.questActionBtn} ${quest.action === 'checkin' && checkedInToday ? styles.disabledBtn : ''}`}
+                    onClick={() => handleQuestAction(quest.action)}
+                    aria-label={`Start quest: ${quest.title}`}
+                    disabled={quest.action === 'checkin' && checkedInToday}
+                  >
+                    {quest.action === 'checkin' ? (checkedInToday ? 'Checked In' : 'Check-in') : 'Start'}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

@@ -2,6 +2,17 @@ import { supabase } from './supabase';
 import { Event, CreateEventData } from '@eventdao/shared';
 
 export class EventService {
+  private static extractStoragePathFromPublicUrl(url: string): string | null {
+    try {
+      const marker = '/object/public/event-media/';
+      const idx = url.indexOf(marker);
+      if (idx === -1) return null;
+      return url.slice(idx + marker.length);
+    } catch {
+      return null;
+    }
+  }
+
   /**
    * Upload files to Supabase Storage
    */
@@ -190,6 +201,49 @@ export class EventService {
       }
     } catch (error) {
       console.error('Error updating stakes:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Permanently delete an event and its media files
+   */
+  static async deleteEvent(id: string): Promise<void> {
+    try {
+      const event = await this.getEventById(id);
+      if (!event) {
+        throw new Error('Event not found');
+      }
+
+      // Best-effort removal of media files from storage
+      const pathsToRemove: string[] = [];
+      if (Array.isArray(event.media_files)) {
+        for (const url of event.media_files) {
+          const path = this.extractStoragePathFromPublicUrl(url);
+          if (path) pathsToRemove.push(path);
+        }
+      }
+
+      if (pathsToRemove.length > 0) {
+        const { error: storageError } = await supabase.storage
+          .from('event-media')
+          .remove(pathsToRemove);
+        if (storageError) {
+          console.warn('Failed to remove some media files:', storageError.message);
+        }
+      }
+
+      // Delete the event row
+      const { error } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        throw new Error(`Failed to delete event: ${error.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting event:', error);
       throw error;
     }
   }

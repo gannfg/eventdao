@@ -22,14 +22,17 @@
 /* Use dark-first palette; no light override for now */
 
 html {
-  scroll-behavior: smooth;
+  /* Remove smooth behavior to prevent scroll jank */
+  scroll-behavior: auto;
 }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  height: 100%;
+  /* Let content define height to avoid nested scrolling issues */
+  height: auto;
+  min-height: 100%;
 }
 
 body {
@@ -47,6 +50,8 @@ body {
   font-display: swap;
   /* Optimize rendering */
   will-change: auto;
+  /* Improve iOS momentum scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Optimize background for different screen sizes */

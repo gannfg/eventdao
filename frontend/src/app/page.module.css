@@ -17,7 +17,11 @@
   overflow-x: hidden;
   position: relative;
   z-index: auto;
-  scroll-behavior: smooth;
+}
+
+/* Ensure anchored sections account for fixed header height */
+.section, .roadmapSection, .joinMovementSection {
+  scroll-margin-top: 120px;
 }
 
 /* Mobile page adjustments */
@@ -26,12 +30,18 @@
     padding-top: 100px;
     background-color: #000000 !important; /* Force black background on mobile */
   }
+  .section, .roadmapSection, .joinMovementSection {
+    scroll-margin-top: 100px;
+  }
 }
 
 @media (max-width: 480px) {
   .page {
     padding-top: 90px;
     background-color: #000000 !important; /* Force black background on mobile */
+  }
+  .section, .roadmapSection, .joinMovementSection {
+    scroll-margin-top: 90px;
   }
 }
 
