@@ -4,6 +4,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletIntegration } from '../lib/wallet-integration';
 import { userService } from '../lib/user-service';
+import { evtCreditsService } from '../lib/evt-credits-service';
+import { stakingService } from '../lib/staking-service';
+import { transactionService } from '../lib/transaction-service';
+import { supabase } from '../lib/supabase';
 import styles from './AccountInfo.module.css';
 
 interface AccountInfoProps {
@@ -39,6 +43,13 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Real-time account data
+  const [availableBalance, setAvailableBalance] = useState<number>(0);
+  const [totalStaked, setTotalStaked] = useState<number>(0);
+  const [netEarnings, setNetEarnings] = useState<number>(0);
+  const [reputation, setReputation] = useState<number>(0);
+  const [dataLoading, setDataLoading] = useState(true);
+
   // Load user's avatar from database when user data is available
   useEffect(() => {
     if (user?.avatar_url) {
@@ -48,14 +59,74 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
     }
   }, [user?.avatar_url]);
 
-  // Mock data - in real app, this would come from your backend
-  const mockData = {
-    availableBalance: 250.50,
-    totalStaked: 25.5,
-    netEarnings: 12.3,
-    reputation: 850,
-    memberSince: '2024-01-15'
-  };
+  // Fetch real-time account data
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchAccountData = async () => {
+      setDataLoading(true);
+      try {
+        // Fetch EVT credits balance
+        const credits = await evtCreditsService.getUserCredits(user.id);
+        setAvailableBalance(credits?.balance || 0);
+
+        // Calculate total staked (sum of all active stakes)
+        const activeStakes = await stakingService.getUserActiveStakes(user.id);
+        const totalStakedAmount = activeStakes.reduce((sum, stake) => {
+          return sum + parseFloat(stake.evt_amount.toString());
+        }, 0);
+        setTotalStaked(totalStakedAmount);
+
+        // Calculate net earnings from transactions
+        const { data: transactions, error: txError } = await supabase
+          .from('transactions')
+          .select('transaction_type, evt_amount, reputation_change')
+          .eq('user_id', user.id);
+
+        if (!txError && transactions) {
+          let totalEarnings = 0;
+          transactions.forEach((tx) => {
+            const amount = parseFloat((tx.evt_amount || 0).toString());
+            if (tx.transaction_type === 'reward') {
+              totalEarnings += amount;
+            } else if (tx.transaction_type === 'stake') {
+              totalEarnings -= amount;
+            }
+          });
+          setNetEarnings(totalEarnings);
+        }
+
+        // Fetch reputation from user record
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('reputation')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (!userError && userData) {
+          setReputation(userData.reputation || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching account data:', error);
+      } finally {
+        setDataLoading(false);
+      }
+    };
+
+    fetchAccountData();
+
+    // Refresh data every 10 seconds
+    const interval = setInterval(fetchAccountData, 10000);
+
+    // Refresh when window regains focus
+    const handleFocus = () => fetchAccountData();
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [user?.id]);
 
   const getCurrentBadge = (reputation: number): Badge => {
     if (reputation >= 1000) return REPUTATION_BADGES[7]; // Opal
@@ -68,7 +139,7 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
     return REPUTATION_BADGES[0]; // Bronze
   };
 
-  const currentBadge = getCurrentBadge(mockData.reputation);
+  const currentBadge = getCurrentBadge(reputation);
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -219,7 +290,9 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
 
           <div className={styles.memberSince}>
             <span className={styles.memberLabel}>Member since:</span>
-            <span className={styles.memberDate}>{formatDate(mockData.memberSince)}</span>
+            <span className={styles.memberDate}>
+              {user?.created_at ? formatDate(user.created_at) : 'N/A'}
+            </span>
           </div>
         </div>
       </div>
@@ -229,7 +302,9 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
         <div className={styles.statCard}>
           <div className={styles.statIcon}>💰</div>
           <div className={styles.statInfo}>
-            <div className={styles.statValue}>{mockData.availableBalance} EVT</div>
+            <div className={styles.statValue}>
+              {dataLoading ? '...' : `${availableBalance.toFixed(2)} EVT`}
+            </div>
             <div className={styles.statLabel}>Available Balance</div>
           </div>
         </div>
@@ -237,7 +312,9 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
         <div className={styles.statCard}>
           <div className={styles.statIcon}>🔒</div>
           <div className={styles.statInfo}>
-            <div className={styles.statValue}>{mockData.totalStaked} EVT</div>
+            <div className={styles.statValue}>
+              {dataLoading ? '...' : `${totalStaked.toFixed(2)} EVT`}
+            </div>
             <div className={styles.statLabel}>Total Staked</div>
           </div>
         </div>
@@ -245,8 +322,8 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
         <div className={styles.statCard}>
           <div className={styles.statIcon}>📈</div>
           <div className={styles.statInfo}>
-            <div className={`${styles.statValue} ${styles.positiveValue}`}>
-              +{mockData.netEarnings} EVT
+            <div className={`${styles.statValue} ${netEarnings >= 0 ? styles.positiveValue : styles.negativeValue}`}>
+              {dataLoading ? '...' : `${netEarnings >= 0 ? '+' : ''}${netEarnings.toFixed(2)} EVT`}
             </div>
             <div className={styles.statLabel}>Net Earnings</div>
           </div>
@@ -255,7 +332,9 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
         <div className={styles.statCard}>
           <div className={styles.statIcon}>⭐</div>
           <div className={styles.statInfo}>
-            <div className={styles.statValue}>{mockData.reputation}</div>
+            <div className={styles.statValue}>
+              {dataLoading ? '...' : reputation}
+            </div>
             <div className={styles.statLabel}>Reputation Points</div>
           </div>
         </div>
@@ -269,13 +348,13 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
             <div 
               className={styles.progressFill}
               style={{ 
-                width: `${(mockData.reputation % 200) / 200 * 100}%`,
+                width: dataLoading ? '0%' : `${(reputation % 200) / 200 * 100}%`,
                 background: `linear-gradient(90deg, ${currentBadge.color}, ${currentBadge.color}88)`
               }}
             />
           </div>
           <div className={styles.progressText}>
-            {200 - (mockData.reputation % 200)} points to {REPUTATION_BADGES[currentBadge.level]?.name || 'Next Level'}
+            {dataLoading ? 'Loading...' : `${200 - (reputation % 200)} points to ${REPUTATION_BADGES[currentBadge.level]?.name || 'Next Level'}`}
           </div>
         </div>
       </div>

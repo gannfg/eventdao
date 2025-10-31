@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { stakingService } from '../lib/staking-service';
 import { evtCreditsService } from '../lib/evt-credits-service';
+import { calculateTimeLeft, useCountdown } from '../utils/countdown';
+import EventCountdown from './EventCountdown';
 import styles from './StakingModal.module.css';
 
 interface StakingModalProps {
@@ -10,6 +12,7 @@ interface StakingModalProps {
   onClose: () => void;
   eventId: string;
   eventTitle: string;
+  eventDate: string;
   userId: string;
   stakeType: 'true' | 'false';
   onStakeSuccess: () => void;
@@ -20,6 +23,7 @@ export default function StakingModal({
   onClose,
   eventId,
   eventTitle,
+  eventDate,
   userId,
   stakeType,
   onStakeSuccess,
@@ -29,6 +33,7 @@ export default function StakingModal({
   const [error, setError] = useState<string | null>(null);
   const [userCredits, setUserCredits] = useState<number>(0);
   const [hasStaked, setHasStaked] = useState(false);
+  const timeInfo = useCountdown(eventDate);
 
   useEffect(() => {
     if (isOpen) {
@@ -42,7 +47,10 @@ export default function StakingModal({
       const credits = await evtCreditsService.getUserCredits(userId);
       setUserCredits(credits?.balance || 0);
     } catch (error) {
-      console.error('Error fetching credits:', error);
+      // Only log actual errors, not expected cases
+      if (error instanceof Error && !error.message.includes('PGRST116')) {
+        console.error('Error fetching credits:', error);
+      }
     }
   };
 
@@ -51,11 +59,20 @@ export default function StakingModal({
       const stake = await stakingService.getUserStake(userId, eventId);
       setHasStaked(stake !== null);
     } catch (error) {
-      console.error('Error checking stake:', error);
+      // Only log actual errors, not expected "not found" cases
+      if (error instanceof Error && !error.message.includes('PGRST116')) {
+        console.error('Error checking stake:', error);
+      }
     }
   };
 
   const handleStake = async () => {
+    // Check if staking window is closed
+    if (timeInfo.isExpired) {
+      setError('Staking is closed for this event');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -113,9 +130,19 @@ export default function StakingModal({
             </div>
           </div>
 
-          {hasStaked && (
+          <EventCountdown eventDate={eventDate} />
+
+          {timeInfo.isExpired && (
             <div className={styles.warning}>
-              ⚠️ You have already staked on this event
+              <span>⚠️</span>
+              <span>Staking is closed for this event</span>
+            </div>
+          )}
+
+          {hasStaked && !timeInfo.isExpired && (
+            <div className={styles.warning}>
+              <span>⚠️</span>
+              <span>You have already staked on this event</span>
             </div>
           )}
 
@@ -137,38 +164,38 @@ export default function StakingModal({
               max={userCredits}
               step="0.01"
               className={styles.input}
-              disabled={loading || hasStaked}
+              disabled={loading || hasStaked || timeInfo.isExpired}
             />
             <div className={styles.quickAmounts}>
               <button
                 type="button"
                 onClick={() => setEvtAmount('50')}
-                className={styles.quickButton}
-                disabled={loading || hasStaked}
+                className={`${styles.quickButton} ${evtAmount === '50' ? styles.quickButtonActive : ''}`}
+                disabled={loading || hasStaked || timeInfo.isExpired}
               >
                 50
               </button>
               <button
                 type="button"
                 onClick={() => setEvtAmount('100')}
-                className={styles.quickButton}
-                disabled={loading || hasStaked}
+                className={`${styles.quickButton} ${evtAmount === '100' ? styles.quickButtonActive : ''}`}
+                disabled={loading || hasStaked || timeInfo.isExpired}
               >
                 100
               </button>
               <button
                 type="button"
                 onClick={() => setEvtAmount('500')}
-                className={styles.quickButton}
-                disabled={loading || hasStaked}
+                className={`${styles.quickButton} ${evtAmount === '500' ? styles.quickButtonActive : ''}`}
+                disabled={loading || hasStaked || timeInfo.isExpired}
               >
                 500
               </button>
               <button
                 type="button"
                 onClick={() => setEvtAmount(userCredits.toString())}
-                className={styles.quickButton}
-                disabled={loading || hasStaked}
+                className={`${styles.quickButton} ${evtAmount === userCredits.toString() ? styles.quickButtonActive : ''}`}
+                disabled={loading || hasStaked || userCredits === 0 || timeInfo.isExpired}
               >
                 All
               </button>
@@ -205,9 +232,9 @@ export default function StakingModal({
           <button
             className={styles.stakeButton}
             onClick={handleStake}
-            disabled={loading || hasStaked || parseFloat(evtAmount) <= 0}
+            disabled={loading || hasStaked || parseFloat(evtAmount) <= 0 || timeInfo.isExpired}
           >
-            {loading ? 'Staking...' : 'Confirm Stake'}
+            {timeInfo.isExpired ? 'Staking Closed' : loading ? 'Staking...' : 'Confirm Stake'}
           </button>
         </div>
       </div>

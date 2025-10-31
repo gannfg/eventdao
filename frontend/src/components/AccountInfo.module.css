@@ -273,6 +273,10 @@
   color: var(--accent);
 }
 
+.negativeValue {
+  color: #f44336;
+}
+
 .statLabel {
   font-size: 11px;
   opacity: 0.7;

@@ -24,14 +24,19 @@ export class EVTCreditsService {
         .from('evt_credits')
         .select('*')
         .eq('user_id', userId)
-        .single();
+        .order('created_at', { ascending: false }) // Get most recent if duplicates exist
+        .limit(1) // Limit to 1 row to handle duplicates
+        .maybeSingle(); // Use maybeSingle() to avoid 406 when no row exists
 
       if (error) {
-        if (error.code === 'PGRST116') {
-          // No credits record, create one
-          return await this.createUserCredits(userId);
-        }
+        // Only log actual errors
+        console.error('Error fetching EVT credits:', error);
         throw new Error(error.message);
+      }
+
+      // If no record exists, create one
+      if (!data) {
+        return await this.createUserCredits(userId);
       }
 
       return data;

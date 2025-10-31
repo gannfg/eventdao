@@ -482,6 +482,12 @@
   transform: translateY(-1px);
 }
 
+.stakeBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* Loading, Error, and No Events States */
 .loading,
 .error,
@@ -829,6 +835,12 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
+}
+
+.modalStakeBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .modalStakeBtn:first-child {

@@ -8,11 +8,13 @@ import StakingModal from "../../components/StakingModal";
 import VerificationModal from "../../components/VerificationModal";
 import ResolutionResults from "../../components/ResolutionResults";
 import { CardSkeleton } from "../../components/LoadingSkeleton";
+import EventCountdown from "../../components/EventCountdown";
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletIntegration } from "../../lib/wallet-integration";
 import { EventService } from "../../lib/event-service";
 import { transactionService } from "../../lib/transaction-service";
 import { Event } from '@eventdao/shared';
+import { calculateTimeLeft } from "../../utils/countdown";
 import styles from './page.module.css';
 
 // Use the Event type from shared types
@@ -84,15 +86,22 @@ export default function ExplorePage() {
       return;
     }
     
+    // Find the event to set as selected event for the staking modal
+    const event = events.find(e => e.id === eventId);
+    if (event) {
+      setSelectedEvent(event);
+    }
+    
     // Open staking modal instead of direct staking
     setSelectedStakeType(stakeType);
     setStakeModalOpen(true);
   };
 
-  const handleStakeSuccess = () => {
-    // Refresh events after successful stake
-    fetchEvents();
+  const handleStakeSuccess = async () => {
+    // Close modal first
     setStakeModalOpen(false);
+    // Refresh events to show updated stake totals
+    await fetchEvents();
   };
 
   const handleVerificationSuccess = () => {
@@ -250,30 +259,37 @@ export default function ExplorePage() {
                   Bond: {event.bond} SOL
                 </div>
 
-                <div className={styles.timeLeft}>
-                  Time left: {event.time_left}
-                </div>
+                <EventCountdown eventDate={event.date} className={styles.timeLeft} />
               </div>
 
               <div className={styles.cardActions}>
-                <button
-                  className={styles.stakeBtn}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleStake(event.id, 'true');
-                  }}
-                >
-                  Stake TRUE
-                </button>
-                <button
-                  className={`${styles.stakeBtn} ${styles.hoaxBtn}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleStake(event.id, 'false');
-                  }}
-                >
-                  Stake FALSE
-                </button>
+                {(() => {
+                  const timeInfo = calculateTimeLeft(event.date);
+                  return (
+                    <>
+                      <button
+                        className={styles.stakeBtn}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStake(event.id, 'true');
+                        }}
+                        disabled={timeInfo.isExpired}
+                      >
+                        Stake TRUE
+                      </button>
+                      <button
+                        className={`${styles.stakeBtn} ${styles.hoaxBtn}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStake(event.id, 'false');
+                        }}
+                        disabled={timeInfo.isExpired}
+                      >
+                        Stake FALSE
+                      </button>
+                    </>
+                  );
+                })()}
               </div>
             </div>
           ))}
@@ -363,9 +379,7 @@ export default function ExplorePage() {
                 Bond: {selectedEvent.bond} SOL
               </div>
 
-              <div className={styles.modalTimeLeft}>
-                Time left: {selectedEvent.time_left}
-              </div>
+              <EventCountdown eventDate={selectedEvent.date} className={styles.modalTimeLeft} />
 
               {/* Resolution Results */}
               {((selectedEvent as any).resolution_status === 'resolved' || (selectedEvent as any).resolution_status === 'ai_verifying') && (
@@ -379,33 +393,51 @@ export default function ExplorePage() {
             </div>
 
             <div className={styles.modalActions}>
-              <button
-                className={styles.modalStakeBtn}
-                onClick={() => {
-                  handleStake(selectedEvent.id, 'true');
-                  closeModal();
-                }}
-              >
-                Stake TRUE
-              </button>
-              <button
-                className={`${styles.modalStakeBtn} ${styles.modalHoaxBtn}`}
-                onClick={() => {
-                  handleStake(selectedEvent.id, 'false');
-                  closeModal();
-                }}
-              >
-                Stake FALSE
-              </button>
-              <button
-                className={`${styles.modalStakeBtn} ${styles.verifyBtn}`}
-                onClick={() => {
-                  handleVerify();
-                  closeModal();
-                }}
-              >
-                Verify Event
-              </button>
+              {(() => {
+                const timeInfo = calculateTimeLeft(selectedEvent.date);
+                return (
+                  <>
+                    <button
+                      className={styles.modalStakeBtn}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!timeInfo.isExpired) {
+                          const currentEvent = selectedEvent;
+                          setIsModalOpen(false);
+                          handleStake(currentEvent.id, 'true');
+                        }
+                      }}
+                      disabled={timeInfo.isExpired}
+                    >
+                      Stake TRUE
+                    </button>
+                    <button
+                      className={`${styles.modalStakeBtn} ${styles.modalHoaxBtn}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!timeInfo.isExpired) {
+                          const currentEvent = selectedEvent;
+                          setIsModalOpen(false);
+                          handleStake(currentEvent.id, 'false');
+                        }
+                      }}
+                      disabled={timeInfo.isExpired}
+                    >
+                      Stake FALSE
+                    </button>
+                    <button
+                      className={`${styles.modalStakeBtn} ${styles.verifyBtn}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleVerify();
+                        closeModal();
+                      }}
+                    >
+                      Verify Event
+                    </button>
+                  </>
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -418,6 +450,7 @@ export default function ExplorePage() {
           onClose={() => setStakeModalOpen(false)}
           eventId={selectedEvent.id}
           eventTitle={selectedEvent.title}
+          eventDate={selectedEvent.date}
           userId={walletUser.id}
           stakeType={selectedStakeType}
           onStakeSuccess={handleStakeSuccess}

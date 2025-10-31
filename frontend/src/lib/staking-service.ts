@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { evtCreditsService } from './evt-credits-service';
+import { EventService } from './event-service';
 
 export interface Stake {
   id: string;
@@ -71,6 +72,9 @@ export class StakingService {
         throw new Error(`Failed to create stake: ${error.message}`);
       }
 
+      // Update event stake totals
+      await this.updateEventStakeTotals(params.eventId);
+
       return data;
     } catch (error) {
       console.error('Staking failed:', error);
@@ -88,16 +92,18 @@ export class StakingService {
       .eq('user_id', userId)
       .eq('event_id', eventId)
       .eq('session_type', 'stake')
-      .single();
+      .order('created_at', { ascending: false }) // Get most recent if duplicates exist
+      .limit(1) // Limit to 1 row to handle duplicates
+      .maybeSingle(); // Use maybeSingle() to avoid 406 when no row exists
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return null; // No stake found
-      }
+      // Only log actual errors
+      console.error('Error fetching user stake:', error);
       throw new Error(error.message);
     }
 
-    return data;
+    // Return null if no stake found (expected for users who haven't staked yet)
+    return data || null;
   }
 
   /**
@@ -200,6 +206,25 @@ export class StakingService {
   async hasUserStaked(userId: string, eventId: string): Promise<boolean> {
     const stake = await this.getUserStake(userId, eventId);
     return stake !== null;
+  }
+
+  /**
+   * Update event stake totals based on all active stakes
+   */
+  async updateEventStakeTotals(eventId: string): Promise<void> {
+    try {
+      const totals = await this.getEventStakeTotals(eventId);
+      
+      // Update the event with new totals
+      await EventService.updateStakes(
+        eventId,
+        totals.trueTotal,
+        totals.falseTotal
+      );
+    } catch (error) {
+      console.error('Error updating event stake totals:', error);
+      // Don't throw - stake creation succeeded, this is just a UI update
+    }
   }
 }
 
