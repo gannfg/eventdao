@@ -5,7 +5,7 @@ export * from './solana';
 // Common utility types
 export type Status = 'pending' | 'active' | 'completed' | 'failed' | 'cancelled';
 export type StakeType = 'authentic' | 'hoax';
-export type TransactionType = 'stake' | 'reward' | 'penalty';
+export type TransactionType = 'stake' | 'submission' | 'reward' | 'penalty' | 'bond_refund' | 'evt_transfer' | 'sol_transfer' | 'reputation' | 'event_resolution';
 export type EventStatus = 'active' | 'completed' | 'disputed';
 
 // Form types

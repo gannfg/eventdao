@@ -17,6 +17,21 @@ export interface Event {
   created_at: string;
   updated_at: string;
   user_id: string;
+  // New staking and resolution fields
+  start_time?: string;
+  end_time?: string;
+  verification_end_time?: string;
+  resolution_status?: 'pending' | 'collecting_votes' | 'ai_verifying' | 'resolved' | 'disputed';
+  true_votes?: number;
+  false_votes?: number;
+  true_stake_total?: number;
+  false_stake_total?: number;
+  ai_verification_result?: string;
+  ai_verification_confidence?: number;
+  ai_verification_timestamp?: string;
+  final_result?: 'true' | 'false' | 'disputed' | 'pending';
+  staking_window_open?: boolean;
+  verification_window_open?: boolean;
 }
 
 export interface User {
@@ -40,12 +55,49 @@ export interface User {
 export interface Transaction {
   id: string;
   user_id: string;
-  event_id: string;
-  type: 'stake' | 'reward' | 'penalty';
-  amount: number;
-  status: 'pending' | 'completed' | 'failed';
-  signature: string;
+  event_id?: string;
+  
+  // Transaction type and category
+  transaction_type: 'stake' | 'submission' | 'reward' | 'penalty' | 'bond_refund' | 'evt_transfer' | 'sol_transfer' | 'reputation' | 'event_resolution';
+  
+  // Stake information (if applicable)
+  stake_type?: 'authentic' | 'hoax';
+  stake_amount: number;
+  
+  // Submission bond information (if applicable)
+  bond_amount: number;
+  
+  // Token amounts (EVT)
+  evt_amount: number;
+  evt_balance_before: number;
+  evt_balance_after: number;
+  
+  // SOL amounts
+  sol_amount: number;
+  sol_balance_before: number;
+  sol_balance_after: number;
+  
+  // Reputation tracking
+  reputation_change: number;
+  reputation_before: number;
+  reputation_after: number;
+  
+  // Solana blockchain info
+  solana_signature?: string;
+  solana_slot?: number;
+  solana_block_time?: string;
+  
+  // Transaction status
+  status: 'pending' | 'completed' | 'failed' | 'confirmed';
+  
+  // Metadata
+  metadata?: Record<string, any>;
+  description?: string;
+  
+  // Timestamps
   created_at: string;
+  updated_at: string;
+  confirmed_at?: string;
 }
 
 export interface Stake {
@@ -54,8 +106,35 @@ export interface Stake {
   event_id: string;
   stake_type: 'authentic' | 'hoax';
   amount: number;
+  evt_amount: number;
+  sol_amount: number;
   created_at: string;
   updated_at: string;
+}
+
+// Helper types for creating transactions
+export interface CreateTransactionData {
+  user_id: string;
+  event_id?: string;
+  transaction_type: Transaction['transaction_type'];
+  stake_type?: 'authentic' | 'hoax';
+  stake_amount?: number;
+  bond_amount?: number;
+  evt_amount?: number;
+  evt_balance_before?: number;
+  evt_balance_after?: number;
+  sol_amount?: number;
+  sol_balance_before?: number;
+  sol_balance_after?: number;
+  reputation_change?: number;
+  reputation_before?: number;
+  reputation_after?: number;
+  solana_signature?: string;
+  solana_slot?: number;
+  solana_block_time?: string;
+  status?: 'pending' | 'completed' | 'failed' | 'confirmed';
+  metadata?: Record<string, any>;
+  description?: string;
 }
 
 export interface CreateEventData {

@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../../components/Header";
 import { useWalletIntegration } from "../../lib/wallet-integration";
 import { EventFormData, SubmitStatus } from '@eventdao/shared';
 import { EventService } from '../../lib/event-service';
+import { transactionService } from '../../lib/transaction-service';
+import { TextSkeleton } from '../../components/LoadingSkeleton';
 import styles from './page.module.css';
 
 export default function SubmitPage() {
@@ -24,7 +26,13 @@ export default function SubmitPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>({ type: null, message: '' });
   const [dragActive, setDragActive] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const { user: walletUser, isConnected } = useWalletIntegration();
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -120,9 +128,27 @@ export default function SubmitPage() {
       console.log('Creating event with data:', eventData);
       console.log('Files to upload:', formData.photos.map(f => f.name));
       
+      // TODO: Implement actual Solana transaction for bond
+      const solanaSignature = 'placeholder_signature'; // Replace with actual signature
+      
       // Create event with Supabase
       const createdEvent = await EventService.createEvent(eventData, formData.photos);
       console.log('Event created successfully:', createdEvent);
+
+      // Record the submission bond transaction
+      try {
+        await transactionService.recordSubmissionBond({
+          userId: walletUser.id,
+          eventId: createdEvent.id,
+          bondAmount: formData.bondAmount,
+          walletAddress: walletUser.wallet_address,
+          solanaSignature: solanaSignature,
+        });
+        console.log('Submission bond transaction recorded successfully');
+      } catch (txError) {
+        console.error('Failed to record submission bond transaction:', txError);
+        // Don't fail the whole submission if transaction recording fails
+      }
 
       setSubmitStatus({ 
         type: 'success', 

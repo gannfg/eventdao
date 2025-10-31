@@ -30,9 +30,13 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  /* Ensure the page (body) controls vertical scroll, not inner containers */
+  overflow-y: auto;
   /* Let content define height to avoid nested scrolling issues */
   height: auto;
   min-height: 100%;
+  /* Improve touch scrolling on mobile browsers */
+  touch-action: pan-y;
 }
 
 body {
@@ -52,6 +56,9 @@ body {
   will-change: auto;
   /* Improve iOS momentum scrolling */
   -webkit-overflow-scrolling: touch;
+  /* Improve paint performance */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Optimize background for different screen sizes */

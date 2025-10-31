@@ -428,6 +428,29 @@
   text-align: left;
   width: 100%;
   min-height: 80px;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.quickActionBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.quickActionBtn:active::before {
+  opacity: 1;
+}
+
+.quickActionBtn:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .actionIcon {
@@ -465,7 +488,13 @@
 .primaryAction:hover {
   background: rgba(182, 254, 77, 0.2);
   border-color: rgba(182, 254, 77, 0.5);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(182, 254, 77, 0.2);
+}
+
+.primaryAction:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(182, 254, 77, 0.3);
 }
 
 .secondaryAction {
@@ -477,7 +506,13 @@
 .secondaryAction:hover {
   background: rgba(156, 39, 176, 0.2);
   border-color: rgba(156, 39, 176, 0.5);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);
+}
+
+.secondaryAction:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.3);
 }
 
 .tertiaryAction {
@@ -490,7 +525,13 @@
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.25);
   color: rgba(255, 255, 255, 1);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.tertiaryAction:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
 .statsList {

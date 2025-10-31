@@ -10,15 +10,21 @@
 .avatarContainer {
   position: relative;
   flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
 }
 
 .avatar {
   width: 32px;
   height: 32px;
+  max-width: 32px;
+  max-height: 32px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(255, 255, 255, 0.2);
   transition: all 0.2s ease;
+  display: block;
 }
 
 .avatarContainer:hover .avatar {
@@ -39,9 +45,16 @@
     gap: 6px;
   }
   
+  .avatarContainer {
+    width: 28px;
+    height: 28px;
+  }
+  
   .avatar {
     width: 28px;
     height: 28px;
+    max-width: 28px;
+    max-height: 28px;
   }
   
   .username {
@@ -55,9 +68,16 @@
     gap: 4px;
   }
   
+  .avatarContainer {
+    width: 24px;
+    height: 24px;
+  }
+  
   .avatar {
     width: 24px;
     height: 24px;
+    max-width: 24px;
+    max-height: 24px;
   }
   
   .username {

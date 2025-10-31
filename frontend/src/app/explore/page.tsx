@@ -4,9 +4,14 @@ import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../../components/Header";
+import StakingModal from "../../components/StakingModal";
+import VerificationModal from "../../components/VerificationModal";
+import ResolutionResults from "../../components/ResolutionResults";
+import { CardSkeleton } from "../../components/LoadingSkeleton";
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletIntegration } from "../../lib/wallet-integration";
 import { EventService } from "../../lib/event-service";
+import { transactionService } from "../../lib/transaction-service";
 import { Event } from '@eventdao/shared';
 import styles from './page.module.css';
 
@@ -23,6 +28,9 @@ export default function ExplorePage() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const [stakeModalOpen, setStakeModalOpen] = useState(false);
+  const [verificationModalOpen, setVerificationModalOpen] = useState(false);
+  const [selectedStakeType, setSelectedStakeType] = useState<'true' | 'false'>('true');
   const { publicKey } = useWallet();
   const { user: walletUser } = useWalletIntegration();
 
@@ -70,21 +78,35 @@ export default function ExplorePage() {
     }
   });
 
-  const handleStake = async (eventId: string, stakeType: 'authentic' | 'hoax') => {
+  const handleStake = async (eventId: string, stakeType: 'true' | 'false') => {
     if (!publicKey || !walletUser) {
       alert('Please connect your wallet first');
       return;
     }
     
-    try {
-      // TODO: Implement actual staking logic with Solana program
-      console.log(`Staking ${stakeType} on event ${eventId} with wallet ${publicKey.toString()}`);
-      console.log(`User: ${walletUser.username} (${walletUser.wallet_address})`);
-      alert(`Staking ${stakeType} on event ${eventId} as ${walletUser.username}`);
-    } catch (error) {
-      console.error('Staking failed:', error);
-      alert('Staking failed. Please try again.');
+    // Open staking modal instead of direct staking
+    setSelectedStakeType(stakeType);
+    setStakeModalOpen(true);
+  };
+
+  const handleStakeSuccess = () => {
+    // Refresh events after successful stake
+    fetchEvents();
+    setStakeModalOpen(false);
+  };
+
+  const handleVerificationSuccess = () => {
+    // Refresh events after successful verification vote
+    fetchEvents();
+    setVerificationModalOpen(false);
+  };
+
+  const handleVerify = () => {
+    if (!publicKey || !walletUser) {
+      alert('Please connect your wallet first');
+      return;
     }
+    setVerificationModalOpen(true);
   };
 
   const handleCardClick = (event: Event) => {
@@ -151,8 +173,10 @@ export default function ExplorePage() {
         </div>
 
         {loading && (
-          <div className={styles.loading}>
-            <p>Loading events...</p>
+          <div className={styles.eventsGrid}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <CardSkeleton key={i} />
+            ))}
           </div>
         )}
         
@@ -184,6 +208,7 @@ export default function ExplorePage() {
                     width={400}
                     height={200}
                     className={styles.previewImage}
+                    loading="lazy"
                     onError={() => handleImageError(event.id)}
                   />
                 ) : (
@@ -235,19 +260,19 @@ export default function ExplorePage() {
                   className={styles.stakeBtn}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleStake(event.id, 'authentic');
+                    handleStake(event.id, 'true');
                   }}
                 >
-                  Stake Authentic
+                  Stake TRUE
                 </button>
                 <button
                   className={`${styles.stakeBtn} ${styles.hoaxBtn}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleStake(event.id, 'hoax');
+                    handleStake(event.id, 'false');
                   }}
                 >
-                  Stake Hoax
+                  Stake FALSE
                 </button>
               </div>
             </div>
@@ -276,6 +301,7 @@ export default function ExplorePage() {
                     width={600}
                     height={300}
                     className={styles.modalImage}
+                    loading="lazy"
                     onError={() => handleImageError(selectedEvent.id)}
                   />
                 </div>
@@ -340,30 +366,74 @@ export default function ExplorePage() {
               <div className={styles.modalTimeLeft}>
                 Time left: {selectedEvent.time_left}
               </div>
+
+              {/* Resolution Results */}
+              {((selectedEvent as any).resolution_status === 'resolved' || (selectedEvent as any).resolution_status === 'ai_verifying') && (
+                <div style={{ marginTop: '24px' }}>
+                  <ResolutionResults
+                    eventId={selectedEvent.id}
+                    eventTitle={selectedEvent.title}
+                  />
+                </div>
+              )}
             </div>
 
             <div className={styles.modalActions}>
               <button
                 className={styles.modalStakeBtn}
                 onClick={() => {
-                  handleStake(selectedEvent.id, 'authentic');
+                  handleStake(selectedEvent.id, 'true');
                   closeModal();
                 }}
               >
-                Stake Authentic
+                Stake TRUE
               </button>
               <button
                 className={`${styles.modalStakeBtn} ${styles.modalHoaxBtn}`}
                 onClick={() => {
-                  handleStake(selectedEvent.id, 'hoax');
+                  handleStake(selectedEvent.id, 'false');
                   closeModal();
                 }}
               >
-                Stake Hoax
+                Stake FALSE
+              </button>
+              <button
+                className={`${styles.modalStakeBtn} ${styles.verifyBtn}`}
+                onClick={() => {
+                  handleVerify();
+                  closeModal();
+                }}
+              >
+                Verify Event
               </button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Staking Modal */}
+      {stakeModalOpen && selectedEvent && walletUser && (
+        <StakingModal
+          isOpen={stakeModalOpen}
+          onClose={() => setStakeModalOpen(false)}
+          eventId={selectedEvent.id}
+          eventTitle={selectedEvent.title}
+          userId={walletUser.id}
+          stakeType={selectedStakeType}
+          onStakeSuccess={handleStakeSuccess}
+        />
+      )}
+
+      {/* Verification Modal */}
+      {verificationModalOpen && selectedEvent && walletUser && (
+        <VerificationModal
+          isOpen={verificationModalOpen}
+          onClose={() => setVerificationModalOpen(false)}
+          eventId={selectedEvent.id}
+          eventTitle={selectedEvent.title}
+          userId={walletUser.id}
+          onVoteSuccess={handleVerificationSuccess}
+        />
       )}
     </div>
   );

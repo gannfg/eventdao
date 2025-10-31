@@ -172,6 +172,8 @@ const AccountInfo: React.FC<AccountInfoProps> = ({ className }) => {
                   src={selectedAvatar} 
                   alt="Profile Avatar" 
                   className={styles.avatarImage}
+                  width={80}
+                  height={80}
                   onError={(e) => {
                     // Fallback to default avatar if image fails to load
                     e.currentTarget.src = DEFAULT_AVATAR;

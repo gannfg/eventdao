@@ -28,6 +28,8 @@ const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ className }) => {
           src={user.avatar_url || '/default-avatar.svg'} 
           alt="Profile Avatar" 
           className={styles.avatar}
+          width={32}
+          height={32}
           onError={(e) => {
             e.currentTarget.src = '/default-avatar.svg';
           }}
