@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 /**
  * Calculate time left until event with real-time formatting
- * Returns time left in format: "Xd Xh Xm Xs" or "Staking Closed"
+ * Returns time left in format: "Xd Xh Xm Xs" or "Verifying"
  */
 export function calculateTimeLeft(eventDate: string): {
   formatted: string;
@@ -15,7 +15,7 @@ export function calculateTimeLeft(eventDate: string): {
 
   if (diffTime <= 0) {
     return {
-      formatted: 'Staking Closed',
+      formatted: 'Verifying',
       isExpired: true,
       milliseconds: 0,
     };

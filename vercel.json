@@ -2,5 +2,11 @@
   "buildCommand": "npm run build:shared && npm run build:frontend",
   "outputDirectory": "frontend/.next",
   "framework": "nextjs",
-  "installCommand": "npm ci"
+  "installCommand": "npm ci",
+  "crons": [
+    {
+      "path": "/api/ai/auto-verify",
+      "schedule": "0 */6 * * *"
+    }
+  ]
 }

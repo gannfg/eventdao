@@ -24,30 +24,23 @@ export interface ResolutionResult {
 export class AIResolutionService {
   /**
    * Verify event using AI
-   * Uses OpenAI API to analyze event and determine truth
+   * Uses Google Gemini API to analyze event and determine truth
    */
   async verifyEventWithAI(event: Event): Promise<AIVerificationResult> {
     try {
-      // TODO: Replace with actual OpenAI API call
-      // For now, using mock implementation
-      
-      const prompt = this.buildVerificationPrompt(event);
-      
-      // Mock AI response - Replace with actual API call
-      const mockResponse = await this.mockAIResponse(event);
-      
-      return mockResponse;
-      
-      /* Actual OpenAI implementation:
+      // Call the Gemini AI API route
       const response = await fetch('/api/ai/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event, prompt })
+        body: JSON.stringify({ event }),
       });
-      
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
       const result = await response.json();
       return result;
-      */
     } catch (error) {
       console.error('AI verification failed:', error);
       return {
@@ -58,55 +51,6 @@ export class AIResolutionService {
     }
   }
 
-  /**
-   * Build verification prompt for AI
-   */
-  private buildVerificationPrompt(event: Event): string {
-    return `
-Analyze the following event claim and determine if it is TRUE or FALSE:
-
-Event Title: ${event.title}
-Description: ${event.description}
-Date: ${event.date}
-Location: ${event.location}
-Category: ${event.category}
-URL: ${event.event_url || 'N/A'}
-
-Please verify:
-1. Did this event actually occur?
-2. Are there credible sources confirming this event?
-3. Is the information accurate?
-
-Respond with:
-- result: 'true' or 'false' or 'uncertain'
-- confidence: 0-100 (percentage)
-- reasoning: Brief explanation
-- sources: Any credible sources found
-
-Response format: JSON
-`;
-  }
-
-  /**
-   * Mock AI response for testing
-   * TODO: Replace with actual OpenAI API call
-   */
-  private async mockAIResponse(event: Event): Promise<AIVerificationResult> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock logic: Randomly determine result
-    const random = Math.random();
-    const result = random > 0.3 ? 'true' : 'false';
-    const confidence = Math.floor(Math.random() * 30) + 70; // 70-100%
-    
-    return {
-      result: result as 'true' | 'false',
-      confidence,
-      reasoning: `After analyzing ${event.title}, I found credible sources confirming this event.`,
-      sources: ['Mock Source 1', 'Mock Source 2'],
-    };
-  }
 
   /**
    * Resolve event (AI verification + reward distribution)

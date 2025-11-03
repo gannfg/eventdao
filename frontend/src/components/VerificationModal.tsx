@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import { evtCreditsService } from '../lib/evt-credits-service';
-import { stakingService } from '../lib/staking-service';
+import { EventService } from '../lib/event-service';
+import { Event } from '@eventdao/shared';
 import styles from './VerificationModal.module.css';
 
 interface VerificationModalProps {
@@ -12,7 +12,14 @@ interface VerificationModalProps {
   eventId: string;
   eventTitle: string;
   userId: string;
-  onVoteSuccess: () => void;
+  onVoteSuccess?: () => void;
+}
+
+interface AIVerificationResult {
+  result: 'true' | 'false' | 'uncertain';
+  confidence: number;
+  reasoning: string;
+  sources?: string[];
 }
 
 export default function VerificationModal({
@@ -23,134 +30,180 @@ export default function VerificationModal({
   userId,
   onVoteSuccess,
 }: VerificationModalProps) {
-  const [vote, setVote] = useState<'true' | 'false' | null>(null);
-  const [evtAmount, setEvtAmount] = useState<string>('50');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [userCredits, setUserCredits] = useState<number>(0);
-  const [hasVoted, setHasVoted] = useState(false);
+  const [event, setEvent] = useState<Event | null>(null);
+  const [aiVerification, setAiVerification] = useState<AIVerificationResult | null>(null);
+  const [aiVerifying, setAiVerifying] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [eventStatus, setEventStatus] = useState<any>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchUserCredits();
-      checkExistingVote();
-      fetchEventStatus();
-    }
-  }, [isOpen, userId, eventId]);
-
-  const fetchUserCredits = async () => {
-    try {
-      const credits = await evtCreditsService.getUserCredits(userId);
-      setUserCredits(credits?.balance || 0);
-    } catch (error) {
-      console.error('Error fetching credits:', error);
-    }
-  };
-
-  const checkExistingVote = async () => {
-    try {
-      const { data } = await supabase
-        .from('verification_votes')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('event_id', eventId)
-        .single();
-
-      if (data) {
-        setHasVoted(true);
-        setVote(data.vote as 'true' | 'false');
-      }
-    } catch (error) {
-      // No vote found
-      setHasVoted(false);
-    }
-  };
+  const [loadingExistingVerification, setLoadingExistingVerification] = useState(true);
+  const hasAutoVerifiedRef = useRef(false);
 
   const fetchEventStatus = async () => {
     try {
-      const { data } = await supabase
+      setLoadingExistingVerification(true);
+      // Try to fetch status columns, but handle missing columns gracefully
+      const { data, error } = await supabase
         .from('events')
-        .select('resolution_status, final_result, verification_window_open')
+        .select('id, resolution_status, final_result, verification_window_open, ai_verification_result, ai_verification_confidence, ai_verification_timestamp')
         .eq('id', eventId)
-        .single();
+        .maybeSingle();
 
-      setEventStatus(data);
+      if (error) {
+        // If columns don't exist (error code 42703), use defaults
+        if (error.code === '42703' || error.message?.includes('does not exist')) {
+          // Set defaults - columns don't exist in database yet
+          setEventStatus({
+            resolution_status: 'pending',
+            verification_window_open: true,
+          });
+          setLoadingExistingVerification(false);
+          return;
+        }
+        // Other errors - still use defaults
+        setEventStatus({
+          resolution_status: 'pending',
+          verification_window_open: true,
+        });
+        setLoadingExistingVerification(false);
+        return;
+      }
+
+      // Merge with defaults in case some columns are missing
+      const status = {
+        resolution_status: data?.resolution_status || 'pending',
+        final_result: data?.final_result || null,
+        verification_window_open: data?.verification_window_open ?? true,
+        ai_verification_result: data?.ai_verification_result || null,
+        ai_verification_confidence: data?.ai_verification_confidence || null,
+        ai_verification_timestamp: data?.ai_verification_timestamp || null,
+      };
+      
+      setEventStatus(status);
+      
+      // If there's existing verification, load it immediately
+      if (status.ai_verification_result) {
+        const timestamp = status.ai_verification_timestamp
+          ? new Date(status.ai_verification_timestamp).toLocaleString()
+          : 'Previously';
+        
+        setAiVerification({
+          result: status.ai_verification_result as 'true' | 'false' | 'uncertain',
+          confidence: status.ai_verification_confidence || 50,
+          reasoning: `Verified on ${timestamp}. The AI has analyzed this event and determined the result.`,
+          sources: [],
+        });
+        hasAutoVerifiedRef.current = true; // Prevent auto-verifying
+      }
+      
+      setLoadingExistingVerification(false);
     } catch (error) {
-      console.error('Error fetching event status:', error);
+      // On any error, use safe defaults
+      setEventStatus({
+        resolution_status: 'pending',
+        verification_window_open: true,
+      });
+      setLoadingExistingVerification(false);
     }
   };
 
-  const handleVote = async () => {
-    if (!vote) {
-      setError('Please select your vote');
+  const fetchEventData = async () => {
+    try {
+      const eventData = await EventService.getEventById(eventId);
+      setEvent(eventData);
+    } catch (error) {
+      console.error('Error fetching event data:', error);
+      setAiError('Failed to load event data');
+    }
+  };
+
+  const verifyWithAI = useCallback(async () => {
+    if (!event) {
+      setAiError('Event data not loaded. Please wait...');
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    setAiVerifying(true);
+    setAiError(null);
+    setAiVerification(null);
 
     try {
-      const amount = parseFloat(evtAmount);
-      
-      if (isNaN(amount) || amount <= 0) {
-        setError('Please enter a valid amount');
-        setLoading(false);
-        return;
-      }
-
-      if (amount > userCredits) {
-        setError('Insufficient EVT credits');
-        setLoading(false);
-        return;
-      }
-
-      // Deduct credits
-      const deducted = await evtCreditsService.deductCredits(userId, amount);
-      if (!deducted) {
-        throw new Error('Failed to deduct EVT credits');
-      }
-
-      // Record verification vote
-      const { error: voteError } = await supabase
-        .from('verification_votes')
-        .insert({
-          user_id: userId,
-          event_id: eventId,
-          vote: vote,
-          evt_stake: amount,
-        });
-
-      if (voteError) {
-        // Refund credits if vote failed
-        await evtCreditsService.addCredits(userId, amount);
-        throw new Error(`Failed to record vote: ${voteError.message}`);
-      }
-
-      // Create a verification stake
-      await stakingService.createStake({
-        userId,
-        eventId,
-        stakeType: vote,
-        evtAmount: amount,
-        sessionType: 'verification',
+      const response = await fetch('/api/ai/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ event }),
       });
 
-      onVoteSuccess();
-      onClose();
-      setVote(null);
-      setEvtAmount('50');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `API returned status ${response.status}`);
+      }
+
+      const result: AIVerificationResult = await response.json();
+      setAiVerification(result);
+
+      // Try to save AI verification to database (if columns exist)
+      try {
+        const { error: updateError } = await supabase
+          .from('events')
+          .update({
+            ai_verification_result: result.result,
+            ai_verification_confidence: result.confidence,
+            ai_verification_timestamp: new Date().toISOString(),
+          })
+          .eq('id', eventId);
+
+        if (updateError) {
+          // Only log if it's not a "column doesn't exist" error
+          if (updateError.code !== 'PGRST204' && !updateError.message?.includes('does not exist')) {
+            console.warn('Could not save AI verification to database:', updateError);
+          }
+          // Don't throw - AI verification was successful, just couldn't save to DB
+        }
+      } catch (dbError) {
+        // Silently handle database errors - AI verification result is still displayed
+        console.warn('Database update skipped (columns may not exist):', dbError);
+      }
+
+      // Don't call onVoteSuccess immediately - it might close the modal
+      // Instead, call it after a delay or let the user close manually
+      // if (onVoteSuccess) {
+      //   onVoteSuccess();
+      // }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Voting failed');
+      setAiError(err instanceof Error ? err.message : 'AI verification failed');
+      console.error('AI verification error:', err);
     } finally {
-      setLoading(false);
+      setAiVerifying(false);
     }
-  };
+  }, [event, eventId]);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Reset error state, but keep verification if it exists
+      setAiError(null);
+      // Don't reset aiVerification immediately - check database first
+      hasAutoVerifiedRef.current = false;
+      fetchEventStatus();
+      fetchEventData();
+    }
+  }, [isOpen, eventId]);
+
+  // Note: Loading existing verification is now handled in fetchEventStatus for immediate display
+
+  // Auto-verify when event data is loaded and no existing verification
+  useEffect(() => {
+    if (isOpen && event && eventStatus && !aiVerification && !aiVerifying && !hasAutoVerifiedRef.current && !eventStatus?.ai_verification_result) {
+      hasAutoVerifiedRef.current = true;
+      verifyWithAI();
+    }
+  }, [isOpen, event, eventStatus, aiVerification, aiVerifying, verifyWithAI]);
 
   if (!isOpen) return null;
 
-  const isEventResolved = eventStatus?.resolution_status === 'resolved';
-  const isVerifiedClosed = !eventStatus?.verification_window_open;
+  const isEventResolved = eventStatus?.resolution_status === 'resolved' || false;
+  const isVerifiedClosed = eventStatus?.verification_window_open === false;
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -172,6 +225,83 @@ export default function VerificationModal({
             </div>
           </div>
 
+          {/* AI Verification Section */}
+          {!isEventResolved && (
+            <div className={styles.aiVerificationSection}>
+              <div className={styles.aiHeader}>
+                <h4 className={styles.aiTitle}>🤖 AI Verification</h4>
+              </div>
+
+              {aiVerifying && (
+                <div className={styles.aiLoading}>
+                  <div className={styles.spinner}></div>
+                  <span>Analyzing event with Gemini AI...</span>
+                </div>
+              )}
+
+              {aiError && (
+                <div className={styles.aiError}>
+                  ⚠️ {aiError}
+                  <button
+                    className={styles.aiRetryButton}
+                    onClick={verifyWithAI}
+                    disabled={aiVerifying || !event}
+                    style={{ marginTop: '12px' }}
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+
+              {aiVerification && !aiVerifying && (
+                <div className={styles.aiResult}>
+                  <div className={styles.aiResultHeader}>
+                    <span className={`${styles.aiResultBadge} ${styles[aiVerification.result]}`}>
+                      {aiVerification.result.toUpperCase()}
+                    </span>
+                    <span className={styles.aiConfidence}>
+                      {aiVerification.confidence}% Confidence
+                    </span>
+                  </div>
+                  <div className={styles.aiReasoning}>
+                    <strong>Analysis:</strong> {aiVerification.reasoning}
+                  </div>
+                  {aiVerification.sources && aiVerification.sources.length > 0 && (
+                    <div className={styles.aiSources}>
+                      <strong>Sources:</strong>
+                      <ul>
+                        {aiVerification.sources.map((source, index) => (
+                          <li key={index}>{source}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <button
+                    className={styles.aiRetryButton}
+                    onClick={verifyWithAI}
+                    disabled={aiVerifying || !event}
+                  >
+                    Re-verify with AI
+                  </button>
+                </div>
+              )}
+
+              {loadingExistingVerification && !aiVerification && (
+                <div className={styles.aiWaiting}>
+                  <div className={styles.spinner}></div>
+                  <span>Checking for existing verification...</span>
+                </div>
+              )}
+
+              {!loadingExistingVerification && !aiVerification && !aiVerifying && !aiError && !eventStatus?.ai_verification_result && (
+                <div className={styles.aiWaiting}>
+                  <div className={styles.spinner}></div>
+                  <span>Preparing AI verification...</span>
+                </div>
+              )}
+            </div>
+          )}
+
           {isEventResolved && (
             <div className={styles.notice}>
               This event has been resolved. You can view the results below.
@@ -183,122 +313,18 @@ export default function VerificationModal({
               Verification window is closed. Waiting for resolution.
             </div>
           )}
-
-          {hasVoted && (
-            <div className={styles.successBox}>
-              ✓ You have already voted: <strong>{vote?.toUpperCase()}</strong>
-            </div>
-          )}
-
-          {!isEventResolved && !isVerifiedClosed && (
-            <>
-              <div className={styles.creditsInfo}>
-                <div className={styles.creditsLabel}>Your EVT Credits:</div>
-                <div className={styles.creditsAmount}>{userCredits.toFixed(2)} EVT</div>
-              </div>
-
-              <div className={styles.voteSection}>
-                <div className={styles.voteLabel}>Your Verdict:</div>
-                <div className={styles.voteButtons}>
-                  <button
-                    className={`${styles.voteButton} ${vote === 'true' ? styles.selected : ''} ${styles.trueButton}`}
-                    onClick={() => setVote('true')}
-                    disabled={loading || hasVoted}
-                  >
-                    ✓ TRUE
-                  </button>
-                  <button
-                    className={`${styles.voteButton} ${vote === 'false' ? styles.selected : ''} ${styles.falseButton}`}
-                    onClick={() => setVote('false')}
-                    disabled={loading || hasVoted}
-                  >
-                    ✗ FALSE
-                  </button>
-                </div>
-              </div>
-
-              <div className={styles.amountInput}>
-                <label htmlFor="evtAmount" className={styles.label}>
-                  Stake Amount (EVT)
-                </label>
-                <input
-                  id="evtAmount"
-                  type="number"
-                  value={evtAmount}
-                  onChange={(e) => setEvtAmount(e.target.value)}
-                  min="1"
-                  max={userCredits}
-                  step="0.01"
-                  className={styles.input}
-                  disabled={loading || hasVoted}
-                />
-                <div className={styles.quickAmounts}>
-                  <button
-                    type="button"
-                    onClick={() => setEvtAmount('25')}
-                    className={styles.quickButton}
-                    disabled={loading || hasVoted}
-                  >
-                    25
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEvtAmount('50')}
-                    className={styles.quickButton}
-                    disabled={loading || hasVoted}
-                  >
-                    50
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEvtAmount('100')}
-                    className={styles.quickButton}
-                    disabled={loading || hasVoted}
-                  >
-                    100
-                  </button>
-                </div>
-              </div>
-
-              {error && (
-                <div className={styles.error}>{error}</div>
-              )}
-
-              <div className={styles.infoBox}>
-                <p className={styles.infoText}>
-                  <strong>Verification Phase</strong>: Vote whether this event actually occurred.
-                </p>
-                <p className={styles.infoText}>
-                  Your vote will be counted towards the final resolution.
-                </p>
-                <p className={styles.infoText}>
-                  If you're correct, you'll earn rewards when the event is resolved.
-                </p>
-              </div>
-            </>
-          )}
         </div>
 
         <div className={styles.footer}>
           <button
             className={styles.cancelButton}
             onClick={onClose}
-            disabled={loading}
+            disabled={aiVerifying}
           >
             Close
           </button>
-          {!isEventResolved && !isVerifiedClosed && !hasVoted && (
-            <button
-              className={styles.voteButtonLarge}
-              onClick={handleVote}
-              disabled={loading || !vote || parseFloat(evtAmount) <= 0}
-            >
-              {loading ? 'Submitting...' : 'Submit Vote'}
-            </button>
-          )}
         </div>
       </div>
     </div>
   );
 }
-

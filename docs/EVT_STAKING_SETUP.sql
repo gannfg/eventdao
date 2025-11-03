@@ -160,12 +160,12 @@ BEGIN
     UPDATE events 
     SET true_stake_total = true_stake_total + NEW.evt_amount,
         authentic_stake = authentic_stake + NEW.evt_amount
-    WHERE id = NEW.event_id;
+    WHERE id::TEXT = NEW.event_id;
   ELSIF NEW.stake_type = 'false' THEN
     UPDATE events 
     SET false_stake_total = false_stake_total + NEW.evt_amount,
         hoax_stake = hoax_stake + NEW.evt_amount
-    WHERE id = NEW.event_id;
+    WHERE id::TEXT = NEW.event_id;
   END IF;
   RETURN NEW;
 END;
@@ -179,9 +179,9 @@ CREATE OR REPLACE FUNCTION update_event_vote_counts()
 RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.vote = 'true' THEN
-    UPDATE events SET true_votes = true_votes + 1 WHERE id = NEW.event_id;
+    UPDATE events SET true_votes = true_votes + 1 WHERE id::TEXT = NEW.event_id;
   ELSIF NEW.vote = 'false' THEN
-    UPDATE events SET false_votes = false_votes + 1 WHERE id = NEW.event_id;
+    UPDATE events SET false_votes = false_votes + 1 WHERE id::TEXT = NEW.event_id;
   END IF;
   RETURN NEW;
 END;
@@ -195,11 +195,12 @@ CREATE TRIGGER update_event_votes AFTER INSERT ON verification_votes
 -- ==========================================
 
 -- Grant default EVT credits to existing users
+-- Note: This will only insert for users who don't already have credits
+-- The WHERE clause prevents duplicates, so ON CONFLICT is not needed
 INSERT INTO evt_credits (user_id, balance, total_earned)
 SELECT id, 100.00, 100.00
 FROM users
-WHERE id NOT IN (SELECT user_id FROM evt_credits)
-ON CONFLICT (user_id) DO NOTHING;
+WHERE id NOT IN (SELECT user_id FROM evt_credits);
 
 -- ==========================================
 -- 9. VIEWS FOR ANALYTICS
@@ -233,7 +234,7 @@ SELECT
   rh.total_users_rewarded,
   rh.created_at as resolved_at
 FROM events e
-LEFT JOIN resolution_history rh ON e.id = rh.event_id
+LEFT JOIN resolution_history rh ON e.id::TEXT = rh.event_id
 WHERE e.resolution_status = 'resolved';
 
 COMMENT ON TABLE evt_credits IS 'Off-chain EVT credit balances for users';

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Header from "../../components/Header";
 import StakingModal from "../../components/StakingModal";
 import VerificationModal from "../../components/VerificationModal";
+import DAOVotingModal from "../../components/DAOVotingModal";
 import ResolutionResults from "../../components/ResolutionResults";
 import { CardSkeleton } from "../../components/LoadingSkeleton";
 import EventCountdown from "../../components/EventCountdown";
@@ -32,6 +33,7 @@ export default function ExplorePage() {
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [stakeModalOpen, setStakeModalOpen] = useState(false);
   const [verificationModalOpen, setVerificationModalOpen] = useState(false);
+  const [daoVotingModalOpen, setDaoVotingModalOpen] = useState(false);
   const [selectedStakeType, setSelectedStakeType] = useState<'true' | 'false'>('true');
   const { publicKey } = useWallet();
   const { user: walletUser } = useWalletIntegration();
@@ -110,11 +112,36 @@ export default function ExplorePage() {
     setVerificationModalOpen(false);
   };
 
+  const handleDAOVoteSuccess = () => {
+    // Refresh events after successful DAO vote
+    fetchEvents();
+    setDaoVotingModalOpen(false);
+  };
+
+  const handleDAOVote = () => {
+    if (!publicKey || !walletUser) {
+      alert('Please connect your wallet first');
+      return;
+    }
+    // Make sure selectedEvent is set before opening DAO voting modal
+    if (!selectedEvent) {
+      console.error('No event selected for DAO vote');
+      return;
+    }
+    setDaoVotingModalOpen(true);
+  };
+
   const handleVerify = () => {
     if (!publicKey || !walletUser) {
       alert('Please connect your wallet first');
       return;
     }
+    // Make sure selectedEvent is set before opening verification modal
+    if (!selectedEvent) {
+      console.error('No event selected for verification');
+      return;
+    }
+    // Open verification modal - don't close details modal yet to preserve selectedEvent
     setVerificationModalOpen(true);
   };
 
@@ -236,9 +263,16 @@ export default function ExplorePage() {
               </div>
 
               <div className={styles.cardHeader}>
-                <span className={`${styles.statusBadge} ${styles[event.status]}`}>
-                  {event.status}
-                </span>
+                {(() => {
+                  const timeInfo = calculateTimeLeft(event.date);
+                  const statusText = timeInfo.isExpired ? 'CLOSED' : event.status;
+                  const statusClass = timeInfo.isExpired ? 'closed' : event.status;
+                  return (
+                    <span className={`${styles.statusBadge} ${styles[statusClass]}`}>
+                      {statusText}
+                    </span>
+                  );
+                })()}
               </div>
 
               <div className={styles.cardContent}>
@@ -381,6 +415,35 @@ export default function ExplorePage() {
 
               <EventCountdown eventDate={selectedEvent.date} className={styles.modalTimeLeft} />
 
+              {/* DAO Voting Button - Show when AI verification exists and verification window is open */}
+              {(selectedEvent as any).ai_verification_result && (selectedEvent as any).verification_window_open && (
+                <div style={{ marginTop: '24px' }}>
+                  <button
+                    className={styles.modalStakeBtn}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const currentEvent = selectedEvent;
+                      setIsModalOpen(false);
+                      setTimeout(() => {
+                        if (currentEvent) {
+                          setSelectedEvent(currentEvent);
+                          handleDAOVote();
+                        }
+                      }, 100);
+                    }}
+                    style={{ 
+                      width: '100%', 
+                      background: 'var(--accent)', 
+                      color: '#0a1a00',
+                      fontSize: '16px',
+                      fontWeight: 700
+                    }}
+                  >
+                    🤝 Participate in DAO Vote
+                  </button>
+                </div>
+              )}
+
               {/* Resolution Results */}
               {((selectedEvent as any).resolution_status === 'resolved' || (selectedEvent as any).resolution_status === 'ai_verifying') && (
                 <div style={{ marginTop: '24px' }}>
@@ -429,8 +492,16 @@ export default function ExplorePage() {
                       className={`${styles.modalStakeBtn} ${styles.verifyBtn}`}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleVerify();
-                        closeModal();
+                        // Keep selectedEvent, close details modal, then open verification modal
+                        const currentEvent = selectedEvent;
+                        setIsModalOpen(false); // Close details modal
+                        // Small delay to ensure state is set before opening verification modal
+                        setTimeout(() => {
+                          if (currentEvent) {
+                            setSelectedEvent(currentEvent); // Ensure event is still set
+                            handleVerify();
+                          }
+                        }, 100);
                       }}
                     >
                       Verify Event
@@ -466,6 +537,17 @@ export default function ExplorePage() {
           eventTitle={selectedEvent.title}
           userId={walletUser.id}
           onVoteSuccess={handleVerificationSuccess}
+        />
+      )}
+
+      {/* DAO Voting Modal */}
+      {daoVotingModalOpen && selectedEvent && walletUser && (
+        <DAOVotingModal
+          isOpen={daoVotingModalOpen}
+          onClose={() => setDaoVotingModalOpen(false)}
+          eventId={selectedEvent.id}
+          eventTitle={selectedEvent.title}
+          onVoteSuccess={handleDAOVoteSuccess}
         />
       )}
     </div>
