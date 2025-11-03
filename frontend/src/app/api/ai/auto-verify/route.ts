@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const geminiApiKey = process.env.GEMINI_API_KEY;
+// Lazy initialization - only create client when needed (not at build time)
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Supabase configuration is missing. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY) environment variables.');
+  }
+  
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
 
-// Use service role key for admin operations if available
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+function getGeminiApiKey() {
+  return process.env.GEMINI_API_KEY;
+}
 
 interface Event {
   id: string;
@@ -108,6 +117,8 @@ function parseGeminiResponse(responseText: string): AIVerificationResult {
 
 export async function POST(request: NextRequest) {
   try {
+    const geminiApiKey = getGeminiApiKey();
+
     // Check for API key
     if (!geminiApiKey) {
       return NextResponse.json(
@@ -121,6 +132,7 @@ export async function POST(request: NextRequest) {
     const now = new Date();
     const fortyEightHoursAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000);
 
+    const supabase = getSupabaseClient();
     const { data: eventsToVerify, error: fetchError } = await supabase
       .from('events')
       .select('*')
@@ -152,11 +164,16 @@ export async function POST(request: NextRequest) {
         const prompt = buildVerificationPrompt(event as Event);
 
         // Call Gemini API - using the same pattern as verify route
+        const apiKey = getGeminiApiKey();
+        if (!apiKey) {
+          throw new Error('Gemini API key not configured');
+        }
+
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-goog-api-key': geminiApiKey,
+            'x-goog-api-key': apiKey,
           },
           body: JSON.stringify({
             contents: [
@@ -241,6 +258,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint for manual triggering or status check
 export async function GET() {
   try {
+    const supabase = getSupabaseClient();
     const now = new Date();
     const fortyEightHoursAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000);
 
